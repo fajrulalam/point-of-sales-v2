@@ -1,64 +1,110 @@
 package com.example.point_of_sales_app_v2;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MakananFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MakananFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class MakananFragment extends Fragment implements MakananGridRecyclerAdapter.OnDataMakanan{
 
-    public MakananFragment() {
-        // Required empty public constructor
-    }
+    OnDataMakananFragment datapasser;
+    RecyclerView recyclerViewMakanan;
+    ArrayList<HashMap<String, ArrayList<Integer>>> makananArrayList;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MakananFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MakananFragment newInstance(String param1, String param2) {
-        MakananFragment fragment = new MakananFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_makanan, container, false);
+        View fragment  = inflater.inflate(R.layout.fragment_makanan, container, false);
+
+
+        //Isi Menu makanan
+        ArrayList<String> namaMakanan = new ArrayList<>();
+        ArrayList<String> namaMakanan_sorted= new ArrayList<>();
+        ArrayList<Integer> gambarMakanan = new ArrayList<>();
+        ArrayList<Integer> hargaSatuan = new ArrayList<>();
+        namaMakanan.add("Bakso");
+        namaMakanan.add("Siomay");
+        namaMakanan.add("Tahu");
+        namaMakanan.add("Kentang Goreng");
+        namaMakanan.add("Asparagus");
+        namaMakanan.add("Pop Mie");
+        namaMakanan_sorted.add("Bakso");
+        namaMakanan_sorted.add("Siomay");
+        namaMakanan_sorted.add("Tahu");
+        namaMakanan_sorted.add("Kentang Goreng");
+        namaMakanan_sorted.add("Asparagus");
+        namaMakanan_sorted.add("Pop Mie");
+        gambarMakanan.add(R.drawable.bakso_compressed);
+        gambarMakanan.add(R.drawable.siomay_compressed);
+        gambarMakanan.add(R.drawable.tofu);
+        gambarMakanan.add(R.drawable.french_fries);
+        gambarMakanan.add(R.drawable.mie_ayam);
+        gambarMakanan.add(R.drawable.popmie_compressed);
+        hargaSatuan.add(7000);
+        hargaSatuan.add(7000);
+        hargaSatuan.add(5000);
+        hargaSatuan.add(5000);
+        hargaSatuan.add(7000);
+        hargaSatuan.add(11000);
+
+
+
+        namaMakanan_sorted.sort(String::compareToIgnoreCase);
+
+        Log.i("Ordered", namaMakanan.toString());
+        Log.i("Unordered", namaMakanan_sorted.toString());
+
+
+
+
+        MakananGridRecyclerAdapter makananGridRecyclerAdapter = new MakananGridRecyclerAdapter(namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan, this);
+        recyclerViewMakanan = fragment.findViewById(R.id.MenuMakananRecyclerView);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3, RecyclerView.VERTICAL, false);
+        recyclerViewMakanan.setLayoutManager(gridLayoutManager);
+        int spanCount = 3; // 3 columns
+        int spacing = 50; // 50px
+        boolean includeEdge = false;
+        recyclerViewMakanan.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        recyclerViewMakanan.setAdapter(makananGridRecyclerAdapter);
+
+
+
+        return fragment;
+
+    }
+
+    @Override
+    public void OnDataMakanan(String namaMakanan, int hargaSatuan) {
+
+        //menerima input dari makananGridRecyclerAdapter, kemudian meneruskan ke Main Activity
+        datapasser.OnDataMakananFragment(namaMakanan, hargaSatuan);
+
+
+    }
+
+
+    public interface OnDataMakananFragment {
+        void OnDataMakananFragment(String namaMakanan, int hargaSatuan);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        datapasser = (OnDataMakananFragment) context;
     }
 }

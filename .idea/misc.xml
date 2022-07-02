@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/drawable/border.xml" value="0.54140625" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/drawable/selectable_view.xml" value="0.54140625" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/activity_main.xml" value="0.575" />
-        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_minuman.xml" value="0.8625" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_makanan.xml" value="0.5171875" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_minuman.xml" value="0.5990950226244344" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/makanan_single_view.xml" value="0.8625" />
       </map>
     </option>
   </component>

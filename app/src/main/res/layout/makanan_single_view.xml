@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:elevation="10dp"
+            android:foreground="@drawable/selectable_view"
+            android:clickable="true"
+            android:layout_margin="15dp"
+            android:outlineProvider="bounds"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="10dp">
+
+
+            <FrameLayout
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/gambarMenu"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/bakso_compressed"/>
+
+                <TextView
+                    android:id="@+id/namaMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="bottom|center"
+                    android:maxLines="1"
+                    android:text="Bakso"
+                    android:backgroundTint="@color/white"
+                    android:textSize="18dp" />
+
+            </FrameLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
+
+</LinearLayout>
