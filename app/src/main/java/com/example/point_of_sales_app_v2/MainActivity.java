@@ -51,5 +51,10 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
     public void OnDataMakananFragment(String namaMakanan, int hargaSatuan) {
         Log.i("DataMakanan", "Nama: " + namaMakanan + " Harga: Rp" +hargaSatuan);
 
+
+
     }
+
+
+
 }
