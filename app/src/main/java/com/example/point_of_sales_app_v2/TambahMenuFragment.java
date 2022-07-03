@@ -41,6 +41,14 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     String makananOrMinuman;
     int selectedImageBitMap;
     int selectedImagePosition;
+    Bundle bundle;
+
+    OnDataMenuBaru datapasser;
+
+    ArrayList<String> namaMakanan;
+    ArrayList<String> namaMakanan_sorted;
+    ArrayList<Integer> gambarMakanan;
+    ArrayList<Integer> hargaSatuan;
 
         public TambahMenuFragment() {
         // Required empty public constructor
@@ -51,6 +59,12 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentTambahMenuBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        bundle = this.getArguments();
+        namaMakanan = bundle.getStringArrayList("namaMakanan");
+        namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
+        gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
+        hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
 
         //Pilihan gambar
         selectedImagePosition = -1;
@@ -104,8 +118,14 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 String namaMenuBaru = binding.namaMenuBaru.getEditText().getText().toString();
                 String hargaMenuBaru = binding.hargaMenuBaru.getEditText().getText().toString();
+                int hargaMenuBaru_int = Integer.parseInt(hargaMenuBaru.replace(",", "") );
                 if (selectedImagePosition != -1 && !makananOrMinuman.matches("") && !namaMenuBaru.matches("") && !hargaMenuBaru.matches("")){
                     Toast.makeText(getActivity(), "Data akan disimpan", Toast.LENGTH_SHORT).show();
+                    namaMakanan.add(namaMenuBaru);
+                    namaMakanan_sorted.add(namaMenuBaru);
+                    gambarMakanan.add(selectedImageBitMap);
+                    hargaSatuan.add(hargaMenuBaru_int);
+                    datapasser.OnDataMenuBaru(namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan);
                     dismiss();
 
 
@@ -164,16 +184,19 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         if (query.matches("update")){
             //get and insert the values....
 
-
-
         }
 
-
-
-
-
-
         return dialog;
+    }
+
+    public interface OnDataMenuBaru{
+            void OnDataMenuBaru(ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        datapasser = (TambahMenuFragment.OnDataMenuBaru) context;
     }
 
     public class RecyclerAdapterPilihGambar extends RecyclerView.Adapter<RecyclerAdapterPilihGambar.ViewHolder>{

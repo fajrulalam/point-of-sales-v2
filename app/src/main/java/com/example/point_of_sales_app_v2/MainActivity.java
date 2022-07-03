@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
     ArrayList<Integer> subtotalPesanan;
     ArrayList<Integer> quantityPesanan;
 
+    SharedPreferences sharedPreferencesMenu;
+
     ActivityMainBinding binding;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -53,14 +56,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         setContentView(view);
 
 
-        binding.settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
-        });
+
 
 
         //Isi Menu makanan
@@ -94,6 +90,29 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         hargaSatuan.add(11000);
 
         namaMakanan_sorted.sort(String::compareToIgnoreCase);
+
+
+        sharedPreferencesMenu = getApplicationContext().getSharedPreferences("Menu", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferencesMenu.edit();
+//        editor.put
+
+
+
+
+        binding.settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("namaMakanan", namaMakanan);
+                bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted);
+                bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
+                bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
+                intent.putExtra("bundle", bundle);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
 
 
         //Pager
