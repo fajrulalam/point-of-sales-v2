@@ -3,6 +3,7 @@ package com.example.point_of_sales_app_v2;
 import static java.util.Objects.*;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -12,6 +13,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
     ActivityMainBinding binding;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,10 +52,54 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         View view = binding.getRoot();
         setContentView(view);
 
-        //Pager 
+
+        binding.settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
+
+
+        //Isi Menu makanan
+        ArrayList<String> namaMakanan = new ArrayList<>();
+        ArrayList<String> namaMakanan_sorted= new ArrayList<>();
+        ArrayList<Integer> gambarMakanan = new ArrayList<>();
+        ArrayList<Integer> hargaSatuan = new ArrayList<>();
+        namaMakanan.add("Bakso");
+        namaMakanan.add("Siomay");
+        namaMakanan.add("Tahu");
+        namaMakanan.add("Kentang Goreng");
+        namaMakanan.add("Asparagus");
+        namaMakanan.add("Pop Mie");
+        namaMakanan_sorted.add("Bakso");
+        namaMakanan_sorted.add("Siomay");
+        namaMakanan_sorted.add("Tahu");
+        namaMakanan_sorted.add("Kentang Goreng");
+        namaMakanan_sorted.add("Asparagus");
+        namaMakanan_sorted.add("Pop Mie");
+        gambarMakanan.add(R.drawable.bakso_compressed);
+        gambarMakanan.add(R.drawable.siomay_compressed);
+        gambarMakanan.add(R.drawable.tofu);
+        gambarMakanan.add(R.drawable.french_fries);
+        gambarMakanan.add(R.drawable.mie_ayam);
+        gambarMakanan.add(R.drawable.popmie_compressed);
+        hargaSatuan.add(7000);
+        hargaSatuan.add(7000);
+        hargaSatuan.add(5000);
+        hargaSatuan.add(5000);
+        hargaSatuan.add(7000);
+        hargaSatuan.add(11000);
+
+        namaMakanan_sorted.sort(String::compareToIgnoreCase);
+
+
+        //Pager
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPagerAdapter.addFragment(new MakananFragment(), "Makanan");
+        viewPagerAdapter.addFragment(new MakananFragment(namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan), "Makanan");
         viewPagerAdapter.addFragment(new MinumanFragment(), "Minuman");
         binding.viewPager.setAdapter(viewPagerAdapter);
 
@@ -80,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
         int index_existOrNot = namaPesanan.indexOf(namaMakanan);
 
+
         if (index_existOrNot == -1){
             namaPesanan.add(namaMakanan);
             hargaSatuanPesanan.add(hargaSatuan);
@@ -99,11 +148,13 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             listTransactionRecyclerAdapter.notifyDataSetChanged();
             countTotal(subtotalPesanan);
 
-
-
         }
 
-        Log.i("DataMakanan", "Nama: " + namaMakanan + " Harga: Rp" +hargaSatuan + "Subtotal: " + subtotalPesanan.get(index_existOrNot) + " Quant: " + quantityPesanan.get(index_existOrNot));
+//        Log.i("DataMakanan", "Nama: " + namaMakanan + " Harga: Rp" +hargaSatuan + "Subtotal: " + subtotalPesanan.get(index_existOrNot) + " Quant: " + quantityPesanan.get(index_existOrNot));
+//        Log.i("Nama Pesanan", "Length : " + namaPesanan.size()+ " " + namaPesanan.toString());
+//        Log.i("subtotal", "Length : " + subtotalPesanan.size()+ " " + subtotalPesanan.toString());
+//        Log.i("harga satuan", "Length : " + hargaSatuanPesanan.size()+ " " + hargaSatuanPesanan.toString());
+//        Log.i("Quantity", "Length : " + quantityPesanan.size()+ " " + quantityPesanan.toString());
 //        listTransactionRecyclerAdapter = new ListTransactionRecyclerAdapter( namaPesanan, hargaSatuanPesanan, subtotalPesanan, quantityPesanan, this);
 
         listTransactionRecyclerAdapter.notifyDataSetChanged();

@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Point_of_Sales_App_v2">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

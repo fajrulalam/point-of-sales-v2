@@ -36,7 +36,7 @@
                 app:srcCompat="@drawable/ic_transaction1" />
 
             <ImageButton
-                android:id="@+id/backEndButton"
+                android:id="@+id/settingsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="120dp"
@@ -198,6 +198,7 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
+            android:layout_marginBottom="70dp"
             android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
 
         <CheckBox

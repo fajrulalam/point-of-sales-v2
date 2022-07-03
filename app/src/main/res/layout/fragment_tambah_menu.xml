@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TambahMenuFragment"
+    android:orientation="horizontal">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:id="@+id/colomn1"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:layout_weight="1.5">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tambahkan Menu"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="24dp"
+            android:textColor="@color/black"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/namaMenuBaru"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="60dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"       >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Nama menu baru"
+                android:textColorHint="#80D5D5D5"
+                android:textSize="18sp"
+                android:padding="5dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/hargaMenuBaru"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_height="60dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"       >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Harga (Rp)"
+                android:textColorHint="#80D5D5D5"
+                android:textSize="18sp"
+                android:padding="5dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+
+            <RadioButton
+                android:id="@+id/radioButton1"
+                style="@style/radioButtonStyle"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/curved__even_less_colorized_bg"
+                android:backgroundTint="@color/border"
+                android:padding="10dp"
+                android:text="Makanan"
+                tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                style="@style/radioButtonStyle"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/curved__even_less_colorized_bg"
+                android:backgroundTint="@color/border"
+
+                android:padding="10dp"
+                android:text="Minuman"
+                tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/colomn2"
+        android:padding="16dp"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="53dp"
+            android:text="Pilih Gambar"
+            android:textSize="24dp"
+            android:fontFamily="@font/montserrat_regular"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pilihGambarRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="80dp">
+
+
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tambahkan"
+            android:backgroundTint="@color/teal_700"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_bold"
+            android:textAllCaps="false"
+            android:letterSpacing="0.1"
+            android:layout_gravity="right"
+            android:layout_marginTop="-60dp"/>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

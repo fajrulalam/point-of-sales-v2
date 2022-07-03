@@ -57,6 +57,7 @@ public class MakananGridRecyclerAdapter extends RecyclerView.Adapter<MakananGrid
 
 
 
+
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

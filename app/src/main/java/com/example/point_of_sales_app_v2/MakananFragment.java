@@ -24,6 +24,17 @@ public class MakananFragment extends Fragment implements MakananGridRecyclerAdap
     OnDataMakananFragment datapasser;
     RecyclerView recyclerViewMakanan;
     ArrayList<HashMap<String, ArrayList<Integer>>> makananArrayList;
+    ArrayList<String> namaMakanan;
+    ArrayList<String> namaMakanan_sorted;
+    ArrayList<Integer> gambarMakanan;
+    ArrayList<Integer> hargaSatuan;
+
+    public MakananFragment(ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan) {
+        this.namaMakanan = namaMakanan;
+        this.namaMakanan_sorted = namaMakanan_sorted;
+        this.gambarMakanan = gambarMakanan;
+        this.hargaSatuan = hargaSatuan;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -33,38 +44,11 @@ public class MakananFragment extends Fragment implements MakananGridRecyclerAdap
 
 
         //Isi Menu makanan
-        ArrayList<String> namaMakanan = new ArrayList<>();
-        ArrayList<String> namaMakanan_sorted= new ArrayList<>();
-        ArrayList<Integer> gambarMakanan = new ArrayList<>();
-        ArrayList<Integer> hargaSatuan = new ArrayList<>();
-        namaMakanan.add("Bakso");
-        namaMakanan.add("Siomay");
-        namaMakanan.add("Tahu");
-        namaMakanan.add("Kentang Goreng");
-        namaMakanan.add("Asparagus");
-        namaMakanan.add("Pop Mie");
-        namaMakanan_sorted.add("Bakso");
-        namaMakanan_sorted.add("Siomay");
-        namaMakanan_sorted.add("Tahu");
-        namaMakanan_sorted.add("Kentang Goreng");
-        namaMakanan_sorted.add("Asparagus");
-        namaMakanan_sorted.add("Pop Mie");
-        gambarMakanan.add(R.drawable.bakso_compressed);
-        gambarMakanan.add(R.drawable.siomay_compressed);
-        gambarMakanan.add(R.drawable.tofu);
-        gambarMakanan.add(R.drawable.french_fries);
-        gambarMakanan.add(R.drawable.mie_ayam);
-        gambarMakanan.add(R.drawable.popmie_compressed);
-        hargaSatuan.add(7000);
-        hargaSatuan.add(7000);
-        hargaSatuan.add(5000);
-        hargaSatuan.add(5000);
-        hargaSatuan.add(7000);
-        hargaSatuan.add(11000);
+//        ArrayList<String> namaMakanan = new ArrayList<>();
+//        ArrayList<String> namaMakanan_sorted= new ArrayList<>();
+//        ArrayList<Integer> gambarMakanan = new ArrayList<>();
+//        ArrayList<Integer> hargaSatuan = new ArrayList<>();
 
-
-
-        namaMakanan_sorted.sort(String::compareToIgnoreCase);
 
         Log.i("Ordered", namaMakanan.toString());
         Log.i("Unordered", namaMakanan_sorted.toString());
