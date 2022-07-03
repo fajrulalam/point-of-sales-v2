@@ -68,7 +68,7 @@
 
 
             <RadioButton
-                android:id="@+id/radioButton1"
+                android:id="@+id/radioButtonMakanan"
                 style="@style/radioButtonStyle"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/curved__even_less_colorized_bg"
@@ -78,7 +78,7 @@
                 tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/radioButtonMinuman"
                 style="@style/radioButtonStyle"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/curved__even_less_colorized_bg"
@@ -133,6 +133,7 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/tambahkanButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tambahkan"

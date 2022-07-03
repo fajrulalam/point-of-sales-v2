@@ -1,5 +1,6 @@
 package com.example.point_of_sales_app_v2;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -10,11 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.ContentInfo;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.point_of_sales_app_v2.databinding.FragmentTambahMenuBinding;
@@ -29,6 +38,9 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
 
     FragmentTambahMenuBinding binding;
     ArrayList<Integer> pilihanGambar;
+    String makananOrMinuman;
+    int selectedImageBitMap;
+    int selectedImagePosition;
 
         public TambahMenuFragment() {
         // Required empty public constructor
@@ -40,7 +52,9 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         binding = FragmentTambahMenuBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        RecyclerAdapterPilihGambar recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar);
+        //Pilihan gambar
+        selectedImagePosition = -1;
+        RecyclerAdapterPilihGambar recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, RecyclerView.VERTICAL, false);
         binding.pilihGambarRecyclerView.setLayoutManager(gridLayoutManager);
         int spanCount = 5; // 3 columns
@@ -50,7 +64,60 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         binding.pilihGambarRecyclerView.setAdapter(recyclerAdapterPilihGambar);
 
 
+        //Meng-format nama menu
+        binding.namaMenuBaru.getEditText().setInputType(InputType.TYPE_CLASS_TEXT);
 
+
+        //Meng-format harga
+        binding.hargaMenuBaru.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        binding.hargaMenuBaru.getEditText().setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        binding.hargaMenuBaru.getEditText().addTextChangedListener(new NumberTextWatcherForThousand(binding.hargaMenuBaru.getEditText()));
+
+
+        //Mengatur Radio Button Makanan atau Minuman
+        makananOrMinuman = "";
+        binding.radioButtonMakanan.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View view) {
+                binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+                binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.border));
+                makananOrMinuman = "Makanan";
+            }
+        });
+        binding.radioButtonMinuman.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View view) {
+                binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+                binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.border));
+                makananOrMinuman = "Minuman";
+            }
+        });
+
+
+
+
+        //Tambahkan Button
+        binding.tambahkanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String namaMenuBaru = binding.namaMenuBaru.getEditText().getText().toString();
+                String hargaMenuBaru = binding.hargaMenuBaru.getEditText().getText().toString();
+                if (selectedImagePosition != -1 && !makananOrMinuman.matches("") && !namaMenuBaru.matches("") && !hargaMenuBaru.matches("")){
+                    Toast.makeText(getActivity(), "Data akan disimpan", Toast.LENGTH_SHORT).show();
+                    dismiss();
+
+
+                } else {
+                    Log.i("selectedImagePosition", ""+ selectedImagePosition);
+                    Log.i("makananOrMinuman", ""+ makananOrMinuman);
+                    Log.i("namaMenuBaru", ""+ namaMenuBaru);
+                    Log.i("hargaMenuBaru", ""+ hargaMenuBaru);
+                    Toast.makeText(getActivity(), "Lengkapi data terlebih dahulu", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return view;
 
@@ -112,10 +179,12 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     public class RecyclerAdapterPilihGambar extends RecyclerView.Adapter<RecyclerAdapterPilihGambar.ViewHolder>{
         Context context;
         ArrayList<Integer> gambar;
+        int mselectedImagePosition;
 
-        public RecyclerAdapterPilihGambar(Context context, ArrayList<Integer> gambar) {
+        public RecyclerAdapterPilihGambar(Context context, ArrayList<Integer> gambar, int mselectedImagePosition) {
             this.context = context;
             this.gambar = gambar;
+            this.mselectedImagePosition = mselectedImagePosition;
         }
 
         @NonNull
@@ -130,6 +199,22 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Glide.with(context).load(gambar.get(position)).into(holder.image);
+
+            if (position == mselectedImagePosition) {
+                holder.cardView.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+            }
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("ItemClickSupport", "It's clicked");
+                    selectedImageBitMap = pilihanGambar.get(holder.getAdapterPosition());
+                    selectedImagePosition = holder.getAdapterPosition();
+
+                    RecyclerAdapterPilihGambar recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
+                    binding.pilihGambarRecyclerView.setAdapter(recyclerAdapterPilihGambar);
+                }
+            });
         }
 
         @Override
@@ -139,18 +224,27 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
 
         class ViewHolder extends RecyclerView.ViewHolder{
             ImageView image;
+            LinearLayout cardView;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
 
 
                 image = itemView.findViewById(R.id.gambarMenu);
+                cardView = itemView.findViewById(R.id.cardView);
 
 
 
             }
 
 
+        }
+    }
+
+    private class NumericKeyBoardTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return source;
         }
     }
 }
