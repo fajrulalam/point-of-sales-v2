@@ -39,13 +39,13 @@
 
         <Button
             android:id="@+id/quantity"
-            android:layout_width="40dp"
+            android:layout_width="60dp"
             android:layout_height="40dp"
             android:layout_marginLeft="0dp"
             android:background="@drawable/custom_button"
             android:backgroundTint="#C4C4C4"
             android:fontFamily="@font/poppins_regular"
-            android:text="3"
+            android:text="999"
             android:textSize="14sp"
             android:textAlignment="gravity"
             android:layout_marginBottom="10dp"/>

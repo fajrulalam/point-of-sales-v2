@@ -61,9 +61,10 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         subtotalPesanan = new ArrayList<>();
         quantityPesanan = new ArrayList<>();
 
+        binding.total.setText("Rp0");
         listTransactionRecyclerAdapter = new ListTransactionRecyclerAdapter( namaPesanan, quantityPesanan, hargaSatuanPesanan, subtotalPesanan, this);
         binding.ListTransactionRecyclerView.setAdapter(listTransactionRecyclerAdapter);
-        
+
 
 
 
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             subtotalPesanan.add(hargaSatuan);
             quantityPesanan.add(1);
             listTransactionRecyclerAdapter.notifyDataSetChanged();
+            countTotal(subtotalPesanan);
             return;
         }
 
@@ -95,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             subtotalPesanan.set(index_existOrNot, subtotalPesanan.get(index_existOrNot) + hargaSatuan);
             quantityPesanan.set(index_existOrNot, quantityPesanan.get(index_existOrNot) + 1);
             listTransactionRecyclerAdapter.notifyDataSetChanged();
+            countTotal(subtotalPesanan);
+
 
 
         }
@@ -109,10 +113,17 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
     }
 
 
-    //What happens when item + or - is clicked
+    public void countTotal(ArrayList<Integer> subtotalPesanan) {
+        int total = 0;
+        for (int i : subtotalPesanan) {
+            total += i;
+        }
 
+        binding.total.setText("Rp" + String.format("%,d", total).replace(",", "."));
 
-    static class ListTransactionRecyclerAdapter extends RecyclerView.Adapter<ListTransactionRecyclerAdapter.ViewHolder>{
+    }
+
+     class ListTransactionRecyclerAdapter extends RecyclerView.Adapter<ListTransactionRecyclerAdapter.ViewHolder>{
         ArrayList<String> namaMakanan;
         ArrayList<Integer> quantity;
         ArrayList<Integer> hargaSatuan;
@@ -150,6 +161,41 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
 
+            holder.plusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pcc = holder.getAdapterPosition();
+                    quantity.set(pcc, quantity.get(pcc)+1);
+                    subtotal.set(pcc, subtotal.get(pcc)+hargaSatuan.get(pcc));
+                    countTotal(subtotalPesanan);
+                    listTransactionRecyclerAdapter.notifyDataSetChanged();
+                }
+            });
+
+            holder.minusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pcc = holder.getAdapterPosition();
+                    quantity.set(pcc, quantity.get(pcc)-1);
+                    subtotal.set(pcc, subtotal.get(pcc)-hargaSatuan.get(pcc));
+                    countTotal(subtotalPesanan);
+
+
+                    if (quantity.get(pcc) == 0) {
+                        namaMakanan.remove(pcc);
+                        quantity.remove(pcc);
+                        hargaSatuan.remove(pcc);
+                        subtotal.remove(pcc);
+                    }
+
+                    listTransactionRecyclerAdapter.notifyDataSetChanged();
+
+
+                }
+            });
+
+
+
         }
 
         @Override
@@ -160,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
 
-        static class ViewHolder extends RecyclerView.ViewHolder{
+        class ViewHolder extends RecyclerView.ViewHolder{
             TextView itemName;
             TextView subtotal;
             TextView minusButton;
