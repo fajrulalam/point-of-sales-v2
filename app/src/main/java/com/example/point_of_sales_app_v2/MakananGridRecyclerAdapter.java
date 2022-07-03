@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class MakananGridRecyclerAdapter extends RecyclerView.Adapter<MakananGridRecyclerAdapter.ViewHolder>{
-
+    Context context;
     ArrayList<String> namaMakanan_unsorted;
     ArrayList<String> namaMakanan_sorted;
     ArrayList<Integer> image;
@@ -26,7 +28,8 @@ public class MakananGridRecyclerAdapter extends RecyclerView.Adapter<MakananGrid
         void OnDataMakanan(String namaMakanan, int hargaSatuan);
     }
 
-    public MakananGridRecyclerAdapter(ArrayList<String> namaMakanan_unsorted, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> image, ArrayList<Integer> harga, OnDataMakanan onDataMakanan) {
+    public MakananGridRecyclerAdapter(Context context, ArrayList<String> namaMakanan_unsorted, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> image, ArrayList<Integer> harga, OnDataMakanan onDataMakanan) {
+        this.context = context;
         this.namaMakanan_unsorted = namaMakanan_unsorted;
         this.namaMakanan_sorted = namaMakanan_sorted;
         this.image = image;
@@ -39,7 +42,7 @@ public class MakananGridRecyclerAdapter extends RecyclerView.Adapter<MakananGrid
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.makanan_single_view, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view, onDataMakanan);
         return  viewHolder;
     }
 
@@ -48,7 +51,8 @@ public class MakananGridRecyclerAdapter extends RecyclerView.Adapter<MakananGrid
 
         int position_unsorted = namaMakanan_unsorted.indexOf(namaMakanan_sorted.get(position));
 
-        holder.gambarMakanan.setImageResource(image.get(position_unsorted));
+//        holder.gambarMakanan.setImageResource(image.get(position_unsorted));
+        Glide.with(context).load(image.get(position_unsorted)).into(holder.gambarMakanan);
         holder.namaMakanan.setText(namaMakanan_unsorted.get(position_unsorted));
 
 
@@ -76,7 +80,7 @@ public class MakananGridRecyclerAdapter extends RecyclerView.Adapter<MakananGrid
         ImageView gambarMakanan;
         CardView cardView;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnDataMakanan onDataMakanan) {
             super(itemView);
 
             namaMakanan = itemView.findViewById(R.id.namaMenu);

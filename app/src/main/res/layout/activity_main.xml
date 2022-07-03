@@ -90,8 +90,9 @@
         </androidx.cardview.widget.CardView>
 
 
-        <ListView
-            android:id="@+id/listview"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ListTransactionRecyclerView"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="match_parent"
             android:layout_height="365dp" />
 
