@@ -23,7 +23,6 @@ public class MakananFragment extends Fragment implements MakananGridRecyclerAdap
 
     OnDataMakananFragment datapasser;
     RecyclerView recyclerViewMakanan;
-    ArrayList<HashMap<String, ArrayList<Integer>>> makananArrayList;
     ArrayList<String> namaMakanan;
     ArrayList<String> namaMakanan_sorted;
     ArrayList<Integer> gambarMakanan;

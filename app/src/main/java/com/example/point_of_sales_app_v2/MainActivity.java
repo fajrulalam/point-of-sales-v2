@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment {
+public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment {
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
     ArrayList<String> namaMakanan_sorted= new ArrayList<>();
     ArrayList<Integer> gambarMakanan = new ArrayList<>();
     ArrayList<Integer> hargaSatuan = new ArrayList<>();
+
+    ArrayList<String> namaMinuman;
+    ArrayList<String> namaMinuman_sorted;
+    ArrayList<Integer> gambarMinuman;
+    ArrayList<Integer> hargaSatuanMinuman;
 
     SharedPreferences sharedPreferencesMenu;
 
@@ -68,27 +73,39 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         namaMakanan_sorted= new ArrayList<>();
         gambarMakanan = new ArrayList<>();
         hargaSatuan = new ArrayList<>();
-//        namaMakanan.add("Bakso");
-//        namaMakanan.add("Siomay");
-//        namaMakanan.add("Tahu");
-//        namaMakanan.add("Kentang Goreng");
-//        namaMakanan.add("Pop Mie");
-//        namaMakanan_sorted.add("Bakso");
-//        namaMakanan_sorted.add("Siomay");
-//        namaMakanan_sorted.add("Tahu");
-//        namaMakanan_sorted.add("Kentang Goreng");
-//        namaMakanan_sorted.add("Pop Mie");
-//        gambarMakanan.add(R.drawable.bakso_compressed);
-//        gambarMakanan.add(R.drawable.siomay_compressed);
-//        gambarMakanan.add(R.drawable.tofu);
-//        gambarMakanan.add(R.drawable.french_fries);
-//        gambarMakanan.add(R.drawable.popmie_compressed);
-//        hargaSatuan.add(7000);
-//        hargaSatuan.add(7000);
-//        hargaSatuan.add(5000);
-//        hargaSatuan.add(5000);
-//        hargaSatuan.add(7000);
 
+        namaMinuman = new ArrayList<>();
+        namaMinuman_sorted= new ArrayList<>();
+        gambarMinuman = new ArrayList<>();
+        hargaSatuanMinuman = new ArrayList<>();
+
+        namaMinuman.add("Kopi Hitam");
+        namaMinuman.add("Teh Panas");
+        namaMinuman.add("Es Teh");
+        namaMinuman.add("Es Milo");
+        namaMinuman.add("Es Buah");
+        namaMinuman.add("Es Dawet");
+        namaMinuman_sorted.add("Kopi Hitam");
+        namaMinuman_sorted.add("Teh Panas");
+        namaMinuman_sorted.add("Es Teh");
+        namaMinuman_sorted.add("Es Milo");
+        namaMinuman_sorted.add("Es Buah");
+        namaMinuman_sorted.add("Es Dawet");
+        gambarMinuman.add(R.drawable.coffee);
+        gambarMinuman.add(R.drawable.hot_tea);
+        gambarMinuman.add(R.drawable.ice_tea);
+        gambarMinuman.add(R.drawable.milo1);
+        gambarMinuman.add(R.drawable.es_buah);
+        gambarMinuman.add(R.drawable.cendol);
+        hargaSatuanMinuman.add(5000);
+        hargaSatuanMinuman.add(5000);
+        hargaSatuanMinuman.add(3000);
+        hargaSatuanMinuman.add(5000);
+        hargaSatuanMinuman.add(5000);
+        hargaSatuanMinuman.add(5000);
+
+
+        namaMakanan_sorted.sort(String::compareToIgnoreCase);
         namaMakanan_sorted.sort(String::compareToIgnoreCase);
 
 
@@ -165,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding.tabLayout.setupWithViewPager(binding.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPagerAdapter.addFragment(new MakananFragment(namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan), "Makanan");
-        viewPagerAdapter.addFragment(new MinumanFragment(), "Minuman");
+        viewPagerAdapter.addFragment(new MinumanFragment(namaMinuman, namaMinuman_sorted, gambarMinuman, hargaSatuanMinuman), "Minuman");
         binding.viewPager.setAdapter(viewPagerAdapter);
 
         //ArrayLists
@@ -224,9 +241,44 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
         listTransactionRecyclerAdapter.notifyDataSetChanged();
 
-
-
     }
+
+
+
+    ///What happens when a beverage item menu is clicked
+    @Override
+    public void OnDataMinumanFragment(String namaMakanan, int hargaSatuan) {
+        Log.i("DataMakanan", "Nama: " + namaMakanan + " Harga: Rp" +hargaSatuan);
+
+        int index_existOrNot = namaPesanan.indexOf(namaMakanan);
+
+
+        if (index_existOrNot == -1){
+            namaPesanan.add(namaMakanan);
+            hargaSatuanPesanan.add(hargaSatuan);
+            subtotalPesanan.add(hargaSatuan);
+            quantityPesanan.add(1);
+            listTransactionRecyclerAdapter.notifyDataSetChanged();
+            countTotal(subtotalPesanan);
+            return;
+        }
+
+
+        if (index_existOrNot != -1) {
+            //namaPesanan sudah ada
+            //hargasatuantidakberubah
+            subtotalPesanan.set(index_existOrNot, subtotalPesanan.get(index_existOrNot) + hargaSatuan);
+            quantityPesanan.set(index_existOrNot, quantityPesanan.get(index_existOrNot) + 1);
+            listTransactionRecyclerAdapter.notifyDataSetChanged();
+            countTotal(subtotalPesanan);
+
+        }
+
+
+        listTransactionRecyclerAdapter.notifyDataSetChanged();
+    }
+
+
 
 
     public void countTotal(ArrayList<Integer> subtotalPesanan) {
@@ -239,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
     }
 
-     class ListTransactionRecyclerAdapter extends RecyclerView.Adapter<ListTransactionRecyclerAdapter.ViewHolder>{
+    class ListTransactionRecyclerAdapter extends RecyclerView.Adapter<ListTransactionRecyclerAdapter.ViewHolder>{
         ArrayList<String> namaMakanan;
         ArrayList<Integer> quantity;
         ArrayList<Integer> hargaSatuan;
