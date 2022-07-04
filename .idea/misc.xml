@@ -9,14 +9,18 @@
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/drawable/curved_border.xml" value="0.88671875" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/drawable/selectable_view.xml" value="0.54140625" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/drawable/selectable_view_notsocurved.xml" value="0.88671875" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/drawable/straight_border.xml" value="0.5421875" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/activity_hapus_menu_fragment.xml" value="0.51796875" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/activity_main.xml" value="0.575" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/activity_settings.xml" value="0.72" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_hapus_or_edit_menu.xml" value="0.496875" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_makanan.xml" value="0.5171875" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_minuman.xml" value="0.5990950226244344" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/fragment_tambah_menu.xml" value="0.8" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/list_transaction.xml" value="0.51796875" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/makanan_single_view.xml" value="0.8625" />
         <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/pilih_gambar_single_view.xml" value="0.8625" />
+        <entry key="..\:/Users/Fajrul Alam/Point_of_Sales_App_v2/app/src/main/res/layout/simple_list_single_view.xml" value="0.8" />
       </map>
     </option>
   </component>
