@@ -1,6 +1,7 @@
 package com.example.point_of_sales_app_v2;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,13 +107,15 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void OnDataMenuBaru(String makananOrMinuman, ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan) {
+    public void OnDataMenuBaru(String makananOrMinuman, ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted_, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan) {
         wasAnythingChanged = true;
         bundle.putStringArrayList("namaMakanan", namaMakanan);
-        bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted);
+        bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted_);
         bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
         bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
+        namaMakanan_sorted.sort(String::compareToIgnoreCase);
         makananListRecyclerAdapter.notifyDataSetChanged();
     }
 

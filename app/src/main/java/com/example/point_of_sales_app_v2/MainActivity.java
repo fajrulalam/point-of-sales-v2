@@ -63,31 +63,31 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         setContentView(view);
 
 
-        //Isi Menu makanan
+//        //Isi Menu makanan
         namaMakanan = new ArrayList<>();
         namaMakanan_sorted= new ArrayList<>();
         gambarMakanan = new ArrayList<>();
         hargaSatuan = new ArrayList<>();
-        namaMakanan.add("Bakso");
-        namaMakanan.add("Siomay");
-        namaMakanan.add("Tahu");
-        namaMakanan.add("Kentang Goreng");
-        namaMakanan.add("Pop Mie");
-        namaMakanan_sorted.add("Bakso");
-        namaMakanan_sorted.add("Siomay");
-        namaMakanan_sorted.add("Tahu");
-        namaMakanan_sorted.add("Kentang Goreng");
-        namaMakanan_sorted.add("Pop Mie");
-        gambarMakanan.add(R.drawable.bakso_compressed);
-        gambarMakanan.add(R.drawable.siomay_compressed);
-        gambarMakanan.add(R.drawable.tofu);
-        gambarMakanan.add(R.drawable.french_fries);
-        gambarMakanan.add(R.drawable.popmie_compressed);
-        hargaSatuan.add(7000);
-        hargaSatuan.add(7000);
-        hargaSatuan.add(5000);
-        hargaSatuan.add(5000);
-        hargaSatuan.add(7000);
+//        namaMakanan.add("Bakso");
+//        namaMakanan.add("Siomay");
+//        namaMakanan.add("Tahu");
+//        namaMakanan.add("Kentang Goreng");
+//        namaMakanan.add("Pop Mie");
+//        namaMakanan_sorted.add("Bakso");
+//        namaMakanan_sorted.add("Siomay");
+//        namaMakanan_sorted.add("Tahu");
+//        namaMakanan_sorted.add("Kentang Goreng");
+//        namaMakanan_sorted.add("Pop Mie");
+//        gambarMakanan.add(R.drawable.bakso_compressed);
+//        gambarMakanan.add(R.drawable.siomay_compressed);
+//        gambarMakanan.add(R.drawable.tofu);
+//        gambarMakanan.add(R.drawable.french_fries);
+//        gambarMakanan.add(R.drawable.popmie_compressed);
+//        hargaSatuan.add(7000);
+//        hargaSatuan.add(7000);
+//        hargaSatuan.add(5000);
+//        hargaSatuan.add(5000);
+//        hargaSatuan.add(7000);
 
         namaMakanan_sorted.sort(String::compareToIgnoreCase);
 
@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             namaMakanan_sorted = extras.getStringArrayList("namaMakanan_sorted");
             gambarMakanan = extras.getIntegerArrayList("gambarMakanan");
             hargaSatuan = extras.getIntegerArrayList("hargaSatuan");
+            namaMakanan_sorted.sort(String::compareToIgnoreCase);
+
 
             try {
                 String namaMakanan_serialized = ObjectSerializer.serialize(namaMakanan);
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
 
             Log.i("namaMakanan", namaMakanan.toString());
             Log.i("namaMakanan_sorted", namaMakanan_sorted.toString());

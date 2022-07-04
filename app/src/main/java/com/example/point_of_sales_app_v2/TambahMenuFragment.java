@@ -276,9 +276,12 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             View view = layoutInflater.inflate(R.layout.pilih_gambar_single_view, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
 
-            String makananYangDiedit = namaMakanan_sorted.get(pcc);
-            int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
-            selectedImageBitMap = pilihanGambar.get(index_unsorted);
+            if (bundle.getString("query").matches("update")){
+                String makananYangDiedit = namaMakanan_sorted.get(pcc);
+                int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+                selectedImageBitMap = pilihanGambar.get(index_unsorted);
+            }
+
 
             return  viewHolder;
         }
