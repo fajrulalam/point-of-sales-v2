@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,7 +28,10 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
         View view = binding.getRoot();
         setContentView(view);
 
-        bundle = getIntent().getExtras();
+        bundle = getIntent().getBundleExtra("bundle");
+
+        Log.i("Test", bundle.getStringArrayList("namaMakanan").toString());
+
         wasAnythingChanged = false;
 
 
@@ -35,9 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
         binding.mainMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                onBackPressed();
 
             }
         });
@@ -57,15 +59,18 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
 
 
 
+
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), TambahMenuFragment.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("bundle", bundle);
-        startActivity(intent);
         Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override

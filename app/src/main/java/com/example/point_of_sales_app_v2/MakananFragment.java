@@ -50,8 +50,8 @@ public class MakananFragment extends Fragment implements MakananGridRecyclerAdap
 //        ArrayList<Integer> hargaSatuan = new ArrayList<>();
 
 
-        Log.i("Ordered", namaMakanan.toString());
-        Log.i("Unordered", namaMakanan_sorted.toString());
+//        Log.i("Ordered", namaMakanan.toString());
+//        Log.i("Unordered", namaMakanan_sorted.toString());
 
 
 

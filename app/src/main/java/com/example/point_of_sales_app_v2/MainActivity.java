@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.example.point_of_sales_app_v2.databinding.ActivityMainBinding;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -43,6 +44,12 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
     ArrayList<Integer> subtotalPesanan;
     ArrayList<Integer> quantityPesanan;
 
+
+    ArrayList<String> namaMakanan = new ArrayList<>();
+    ArrayList<String> namaMakanan_sorted= new ArrayList<>();
+    ArrayList<Integer> gambarMakanan = new ArrayList<>();
+    ArrayList<Integer> hargaSatuan = new ArrayList<>();
+
     SharedPreferences sharedPreferencesMenu;
 
     ActivityMainBinding binding;
@@ -56,45 +63,81 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         setContentView(view);
 
 
-
-
-
         //Isi Menu makanan
-        ArrayList<String> namaMakanan = new ArrayList<>();
-        ArrayList<String> namaMakanan_sorted= new ArrayList<>();
-        ArrayList<Integer> gambarMakanan = new ArrayList<>();
-        ArrayList<Integer> hargaSatuan = new ArrayList<>();
+        namaMakanan = new ArrayList<>();
+        namaMakanan_sorted= new ArrayList<>();
+        gambarMakanan = new ArrayList<>();
+        hargaSatuan = new ArrayList<>();
         namaMakanan.add("Bakso");
         namaMakanan.add("Siomay");
         namaMakanan.add("Tahu");
         namaMakanan.add("Kentang Goreng");
-        namaMakanan.add("Asparagus");
         namaMakanan.add("Pop Mie");
         namaMakanan_sorted.add("Bakso");
         namaMakanan_sorted.add("Siomay");
         namaMakanan_sorted.add("Tahu");
         namaMakanan_sorted.add("Kentang Goreng");
-        namaMakanan_sorted.add("Asparagus");
         namaMakanan_sorted.add("Pop Mie");
         gambarMakanan.add(R.drawable.bakso_compressed);
         gambarMakanan.add(R.drawable.siomay_compressed);
         gambarMakanan.add(R.drawable.tofu);
         gambarMakanan.add(R.drawable.french_fries);
-        gambarMakanan.add(R.drawable.mie_ayam);
         gambarMakanan.add(R.drawable.popmie_compressed);
         hargaSatuan.add(7000);
         hargaSatuan.add(7000);
         hargaSatuan.add(5000);
         hargaSatuan.add(5000);
         hargaSatuan.add(7000);
-        hargaSatuan.add(11000);
 
         namaMakanan_sorted.sort(String::compareToIgnoreCase);
 
 
+
+
+        //Get Value from the Saved SharedPreferences
         sharedPreferencesMenu = getApplicationContext().getSharedPreferences("Menu", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferencesMenu.edit();
-//        editor.put
+
+
+        try {
+            namaMakanan = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMakanan",  ObjectSerializer.serialize(new ArrayList<String>())));
+            namaMakanan_sorted = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMakanan_sorted",  ObjectSerializer.serialize(new ArrayList<String>())));
+            gambarMakanan = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("gambarMakanan",  ObjectSerializer.serialize(new ArrayList<String>())));
+            hargaSatuan = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("hargaSatuan",  ObjectSerializer.serialize(new ArrayList<String>())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //Update the ArrayLists if an intent is received
+        Bundle extras = getIntent().getBundleExtra("bundle");
+        if (extras != null) {
+            namaMakanan = extras.getStringArrayList("namaMakanan");
+            namaMakanan_sorted = extras.getStringArrayList("namaMakanan_sorted");
+            gambarMakanan = extras.getIntegerArrayList("gambarMakanan");
+            hargaSatuan = extras.getIntegerArrayList("hargaSatuan");
+
+            try {
+                String namaMakanan_serialized = ObjectSerializer.serialize(namaMakanan);
+                String namaMakanan_sorted_serialized = ObjectSerializer.serialize(namaMakanan_sorted);
+                String gambarMakanan_serialized = ObjectSerializer.serialize(gambarMakanan);
+                String hargaSatuan_serialized = ObjectSerializer.serialize(hargaSatuan);
+
+                editor.putString("namaMakanan", namaMakanan_serialized).apply();
+                editor.putString("namaMakanan_sorted", namaMakanan_sorted_serialized).apply();
+                editor.putString("gambarMakanan", gambarMakanan_serialized).apply();
+                editor.putString("hargaSatuan", hargaSatuan_serialized).apply();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Log.i("namaMakanan", namaMakanan.toString());
+            Log.i("namaMakanan_sorted", namaMakanan_sorted.toString());
+            Log.i("gambarMakanan", gambarMakanan.toString());
+            Log.i("hargaSatuan", hargaSatuan.toString());
+        }
+
+
 
 
 
@@ -103,13 +146,13 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(intent);
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("namaMakanan", namaMakanan);
                 bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted);
                 bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
                 bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
                 intent.putExtra("bundle", bundle);
+                startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
