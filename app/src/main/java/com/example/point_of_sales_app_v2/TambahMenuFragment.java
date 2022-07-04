@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -50,6 +51,8 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     ArrayList<Integer> gambarMakanan;
     ArrayList<Integer> hargaSatuan;
 
+    int pcc;
+
         public TambahMenuFragment() {
         // Required empty public constructor
     }
@@ -66,16 +69,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
         hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
 
-        //Pilihan gambar
-        selectedImagePosition = -1;
-        RecyclerAdapterPilihGambar recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, RecyclerView.VERTICAL, false);
-        binding.pilihGambarRecyclerView.setLayoutManager(gridLayoutManager);
-        int spanCount = 5; // 3 columns
-        int spacing = 0; // 50px
-        boolean includeEdge = false;
-        binding.pilihGambarRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-        binding.pilihGambarRecyclerView.setAdapter(recyclerAdapterPilihGambar);
+
 
 
         //Meng-format nama menu
@@ -108,6 +102,47 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                 makananOrMinuman = "Minuman";
             }
         });
+
+
+        //If the query is edit
+        pcc = -1;
+        selectedImagePosition = -1;
+        if (bundle.getString("query").matches("edit")) {
+            pcc = bundle.getInt("pcc");
+            String makananYangDiedit = namaMakanan_sorted.get(pcc);
+
+            int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+            selectedImagePosition = pilihanGambar.indexOf(gambarMakanan.get(index_unsorted));
+            binding.tambahkanButton.setText("Selesai");
+
+
+            binding.namaMenuBaru.getEditText().setText(makananYangDiedit);
+            binding.hargaMenuBaru.getEditText().setText(String.format("%,d", hargaSatuan.get(index_unsorted)));
+
+            makananOrMinuman = bundle.getString("makananOrMinuman");
+            switch (makananOrMinuman) {
+                case "Minuman":
+                    binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+                    binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.border));
+                    break;
+                case "Makanan":
+                    binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+                    binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.border));
+                    break;
+            }
+
+
+        }
+
+        //Pilihan gambar
+        RecyclerAdapterPilihGambar recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, RecyclerView.VERTICAL, false);
+        binding.pilihGambarRecyclerView.setLayoutManager(gridLayoutManager);
+        int spanCount = 5; // 3 columns
+        int spacing = 0; // 50px
+        boolean includeEdge = false;
+        binding.pilihGambarRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        binding.pilihGambarRecyclerView.setAdapter(recyclerAdapterPilihGambar);
 
 
 

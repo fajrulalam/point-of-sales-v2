@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
-    android:foreground="@drawable/selectable_view"
-    android:clickable="true"
     android:background="@color/white"
     android:backgroundTint="@color/white"
     android:layout_marginBottom="0.5dp"
@@ -14,27 +12,54 @@
 
     <TextView
         android:id="@+id/nama"
-        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_width="200dp"
+        android:maxLines="1"
         android:layout_height="wrap_content"
-        android:text="I am text"
-        android:textSize="16sp"
+        android:ellipsize="end"
+        android:text="Kentang Goreng"
+        android:textSize="14sp"
         android:textColor="@color/black"
         android:fontFamily="@font/montserrat_bold"
         />
+
+
+
+    <TextView
+        android:id="@+id/harga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rp99.000"
+        android:layout_gravity="center_vertical"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/purple_700"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/harga"
+    <ImageView
+
+        android:foreground="@drawable/selectable_view"
+        android:clickable="true"
+        android:id="@+id/edit"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Rp99.000"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserrat_regular"
-        android:textColor="@color/purple_700"/>
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_edit_24"
+        android:padding="10dp"/>
+
+    <ImageView
+        android:foreground="@drawable/selectable_view"
+        android:clickable="true"
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:padding="10dp"/>
+
+
 
 
 
