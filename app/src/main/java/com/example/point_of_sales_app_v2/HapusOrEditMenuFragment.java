@@ -1,7 +1,9 @@
 package com.example.point_of_sales_app_v2;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.point_of_sales_app_v2.databinding.FragmentHapusOrEditMenuBinding;
@@ -34,10 +37,10 @@ public class HapusOrEditMenuFragment extends BottomSheetDialogFragment {
     ArrayList<String> namaMakanan_sorted;
     ArrayList<Integer> gambar;
     ArrayList<Integer> hargaSatuan;
+    MakananListRecyclerAdapter makananListRecyclerAdapter;
 
     public HapusOrEditMenuFragment() {
     }
-
 
     @Nullable
     @Override
@@ -49,8 +52,11 @@ public class HapusOrEditMenuFragment extends BottomSheetDialogFragment {
 
         namaMakanan = bundle.getStringArrayList("namaMakanan");
         namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
-        gambar = bundle.getIntegerArrayList("gambar");
+        gambar = bundle.getIntegerArrayList("gambarMakanan");
         hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
+
+        makananListRecyclerAdapter = new MakananListRecyclerAdapter(getContext(), namaMakanan_sorted, hargaSatuan);
+        binding.makananRecyclerView.setAdapter(makananListRecyclerAdapter);
 
 
 
@@ -80,37 +86,79 @@ public class HapusOrEditMenuFragment extends BottomSheetDialogFragment {
     public class MakananListRecyclerAdapter extends RecyclerView.Adapter<MakananListRecyclerAdapter.ViewHolder>{
 
         Context context;
-        ArrayList<String> namaMakanan;
-        ArrayList<Integer> hargaSatuan;
+        ArrayList<String> namaMakanan_sorted_rv;
+        ArrayList<Integer> hargaSatuan_rv;
 
-
+        public MakananListRecyclerAdapter(Context context, ArrayList<String> namaMakanan_rv, ArrayList<Integer> hargaSatuan_rv) {
+            this.context = context;
+            this.namaMakanan_sorted_rv = namaMakanan_rv;
+            this.hargaSatuan_rv = hargaSatuan_rv;
+        }
 
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(R.layout.simple_list_single_view, parent, false);
+            ViewHolder viewHolder = new ViewHolder(view);
+            return  viewHolder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.nama.setText(namaMakanan_sorted_rv.get(position));
+            holder.harga.setText("Rp"+String.format("%,d", hargaSatuan_rv.get(position)));
+
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Yakin hapus menu ini?")
+                            .setMessage("\n")
+                            .setPositiveButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setNegativeButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String namaMenu = namaMakanan_sorted_rv.get(holder.getAdapterPosition());
+                                    namaMakanan_sorted.remove(holder.getAdapterPosition());
+                                    int index =  namaMakanan.indexOf(namaMenu);
+
+                                    namaMakanan.remove(index);
+                                    hargaSatuan.remove(index);
+                                    gambar.remove(index);
+
+                                    makananListRecyclerAdapter.notifyDataSetChanged();
+
+
+                                }
+                            }).show();
+                }
+            });
+
 
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return namaMakanan_sorted_rv.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder{
-            ImageView image;
-            LinearLayout cardView;
+            TextView nama;
+            TextView harga;
+            LinearLayout linearLayout;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
 
-
-                image = itemView.findViewById(R.id.gambarMenu);
-                cardView = itemView.findViewById(R.id.cardView);
+                nama = itemView.findViewById(R.id.nama);
+                harga = itemView.findViewById(R.id.harga);
+                linearLayout = itemView.findViewById(R.id.linearLayout);
 
 
 

@@ -56,6 +56,16 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
             }
         });
 
+        binding.DeletecardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HapusOrEditMenuFragment hapusOrEditMenuFragment = new HapusOrEditMenuFragment();
+                bundle.putString("query", "create");
+                hapusOrEditMenuFragment.setArguments(bundle);
+                hapusOrEditMenuFragment.show(getSupportFragmentManager(),hapusOrEditMenuFragment.getTag());
+            }
+        });
+
 
 
 
