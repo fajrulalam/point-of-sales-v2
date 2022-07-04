@@ -154,23 +154,47 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                 String namaMenuBaru = binding.namaMenuBaru.getEditText().getText().toString();
                 String hargaMenuBaru = binding.hargaMenuBaru.getEditText().getText().toString();
                 int hargaMenuBaru_int = Integer.parseInt(hargaMenuBaru.replace(",", "") );
-                if (selectedImagePosition != -1 && !makananOrMinuman.matches("") && !namaMenuBaru.matches("") && !hargaMenuBaru.matches("")){
-                    Toast.makeText(getActivity(), "Data akan disimpan", Toast.LENGTH_SHORT).show();
+
+                //Validate form completion
+                if (selectedImagePosition == -1 || makananOrMinuman.matches("") || namaMenuBaru.matches("") || hargaMenuBaru.matches("")) {
+                    Toast.makeText(getActivity(), "Lengkapi data terlebih dahulu", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (bundle.getString("query").matches("create")){
                     namaMakanan.add(namaMenuBaru);
                     namaMakanan_sorted.add(namaMenuBaru);
                     gambarMakanan.add(selectedImageBitMap);
                     hargaSatuan.add(hargaMenuBaru_int);
-                    datapasser.OnDataMenuBaru(namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan);
+                    datapasser.OnDataMenuBaru(makananOrMinuman, namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan);
+                    Toast.makeText(getActivity(), "Data akan disimpan", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                } else {
+
+                    String makananYangDiedit = namaMakanan_sorted.get(pcc);
+                    int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+                    namaMakanan_sorted.set(pcc, namaMenuBaru);
+                    namaMakanan.set(index_unsorted, namaMenuBaru);
+                    gambarMakanan.set(index_unsorted, selectedImageBitMap);
+                    hargaSatuan.set(index_unsorted, hargaMenuBaru_int);
+                    datapasser.OnDataMenuBaru(makananOrMinuman, namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan);
+                    Toast.makeText(getActivity(), "Data akan disimpan", Toast.LENGTH_SHORT).show();
                     dismiss();
 
 
-                } else {
-                    Log.i("selectedImagePosition", ""+ selectedImagePosition);
-                    Log.i("makananOrMinuman", ""+ makananOrMinuman);
-                    Log.i("namaMenuBaru", ""+ namaMenuBaru);
-                    Log.i("hargaMenuBaru", ""+ hargaMenuBaru);
-                    Toast.makeText(getActivity(), "Lengkapi data terlebih dahulu", Toast.LENGTH_SHORT).show();
                 }
+
+
+
+
+
+//                } else {
+//                    Log.i("selectedImagePosition", ""+ selectedImagePosition);
+//                    Log.i("makananOrMinuman", ""+ makananOrMinuman);
+//                    Log.i("namaMenuBaru", ""+ namaMenuBaru);
+//                    Log.i("hargaMenuBaru", ""+ hargaMenuBaru);
+//                    Toast.makeText(getActivity(), "Lengkapi data terlebih dahulu", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
@@ -225,7 +249,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     }
 
     public interface OnDataMenuBaru{
-            void OnDataMenuBaru(ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan);
+            void OnDataMenuBaru(String makananOrMinuman, ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan);
     }
 
     @Override
@@ -251,6 +275,11 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View view = layoutInflater.inflate(R.layout.pilih_gambar_single_view, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
+
+            String makananYangDiedit = namaMakanan_sorted.get(pcc);
+            int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+            selectedImageBitMap = pilihanGambar.get(index_unsorted);
+
             return  viewHolder;
         }
 
@@ -261,6 +290,8 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             if (position == mselectedImagePosition) {
                 holder.cardView.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
             }
+
+
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override

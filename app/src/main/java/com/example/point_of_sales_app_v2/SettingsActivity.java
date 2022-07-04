@@ -103,15 +103,16 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
+
+
     @Override
-    public void OnDataMenuBaru(ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan) {
+    public void OnDataMenuBaru(String makananOrMinuman, ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan) {
         wasAnythingChanged = true;
         bundle.putStringArrayList("namaMakanan", namaMakanan);
         bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted);
         bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
         bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
         makananListRecyclerAdapter.notifyDataSetChanged();
-
     }
 
 
