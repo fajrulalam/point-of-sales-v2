@@ -90,10 +90,18 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
+
+                //MAKANAN
                 binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
                 binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.border));
                 makananOrMinuman = "Makanan";
                 populatePilihanGambar(makananOrMinuman);
+                recyclerAdapterPilihGambar.notifyDataSetChanged();
+
+                namaMakanan = bundle.getStringArrayList("namaMakanan");
+                namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
+                gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
+                hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
             }
         });
         binding.radioButtonMinuman.setOnClickListener(new View.OnClickListener() {
@@ -104,24 +112,57 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                 binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.border));
                 makananOrMinuman = "Minuman";
                 populatePilihanGambar(makananOrMinuman);
+                recyclerAdapterPilihGambar.notifyDataSetChanged();
+
+                namaMakanan = bundle.getStringArrayList("namaMinuman");
+                namaMakanan_sorted = bundle.getStringArrayList("namaMinuman_sorted");
+                gambarMakanan = bundle.getIntegerArrayList("gambarMinuman");
+                hargaSatuan = bundle.getIntegerArrayList("hargaSatuanMinuman");
             }
         });
+
+
+        //If the query is create
+//        if (bundle.getString("query").matches("create")) {
+//            Log.i("Create query", "acknowledged");
+//            switch (makananOrMinuman) {
+//                case "Minuman":
+//
+//
+//                    namaMakanan = bundle.getStringArrayList("namaMinuman");
+//                    namaMakanan_sorted = bundle.getStringArrayList("namaMinuman_sorted");
+//                    gambarMakanan = bundle.getIntegerArrayList("gambarMinuman");
+//                    hargaSatuan = bundle.getIntegerArrayList("hargaSatuanMinuman");
+//                    populatePilihanGambar("Minuman");
+//
+//
+//
+//                    break;
+//                case "Makanan":
+//
+//
+//                    namaMakanan = bundle.getStringArrayList("namaMakanan");
+//                    namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
+//                    gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
+//                    hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
+//
+//                    populatePilihanGambar("Makanan");
+//
+//
+//
+//                    break;
+//            }
+//        }
 
 
         //If the query is edit
         pcc = -1;
         selectedImagePosition = -1;
         if (bundle.getString("query").matches("edit")) {
-
-
             makananOrMinuman = bundle.getString("makananOrMinuman");
-
-
             String makananYangDiedit = "";
             int index_unsorted = -1;
             pcc = bundle.getInt("pcc");
-
-
             switch (makananOrMinuman) {
                 case "Minuman":
                     binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
@@ -131,8 +172,6 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                     namaMakanan_sorted = bundle.getStringArrayList("namaMinuman_sorted");
                     gambarMakanan = bundle.getIntegerArrayList("gambarMinuman");
                     hargaSatuan = bundle.getIntegerArrayList("hargaSatuanMinuman");
-
-
                     populatePilihanGambar("Minuman");
 
                     makananYangDiedit = namaMakanan_sorted.get(pcc);
@@ -165,19 +204,9 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
 
             binding.namaMenuBaru.getEditText().setText(makananYangDiedit);
             binding.hargaMenuBaru.getEditText().setText(String.format("%,d", hargaSatuan.get(index_unsorted)));
-
-
         }
 
-        //Pilihan gambar
-        recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, RecyclerView.VERTICAL, false);
-        binding.pilihGambarRecyclerView.setLayoutManager(gridLayoutManager);
-        int spanCount = 5; // 3 columns
-        int spacing = 0; // 50px
-        boolean includeEdge = false;
-        binding.pilihGambarRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-        binding.pilihGambarRecyclerView.setAdapter(recyclerAdapterPilihGambar);
+
 
 
 
@@ -188,7 +217,6 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 String namaMenuBaru = binding.namaMenuBaru.getEditText().getText().toString();
                 String hargaMenuBaru = binding.hargaMenuBaru.getEditText().getText().toString();
-                int hargaMenuBaru_int = Integer.parseInt(hargaMenuBaru.replace(",", "") );
 
                 //Validate form completion
                 if (selectedImagePosition == -1 || makananOrMinuman.matches("") || namaMenuBaru.matches("") || hargaMenuBaru.matches("")) {
@@ -196,6 +224,14 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                     return;
                 }
 
+
+                    Log.i("selectedImagePosition", ""+ selectedImagePosition);
+                    Log.i("makananOrMinuman", ""+ makananOrMinuman);
+                    Log.i("namaMenuBaru", ""+ namaMenuBaru);
+                    Log.i("hargaMenuBaru", ""+ hargaMenuBaru);
+
+
+                int hargaMenuBaru_int = Integer.parseInt(hargaMenuBaru.replace(",", "") );
                 if (bundle.getString("query").matches("create")){
                     namaMakanan.add(namaMenuBaru);
                     namaMakanan_sorted.add(namaMenuBaru);
@@ -272,6 +308,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     }
 
     public void populatePilihanGambar(String makananOrMinuman) {
+            pilihanGambar.clear();
 
         if (makananOrMinuman.matches("Makanan")){
             pilihanGambar.add(R.drawable.bakso_compressed);
@@ -297,7 +334,15 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             pilihanGambar.add(R.drawable.coffee);
             pilihanGambar.add(R.drawable.es_buah);
         }
+        //Pilihan gambar
         recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, RecyclerView.VERTICAL, false);
+        binding.pilihGambarRecyclerView.setLayoutManager(gridLayoutManager);
+        int spanCount = 5; // 3 columns
+        int spacing = 0; // 50px
+        boolean includeEdge = false;
+        binding.pilihGambarRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        binding.pilihGambarRecyclerView.setAdapter(recyclerAdapterPilihGambar);
 
 
 
