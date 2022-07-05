@@ -25,15 +25,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.point_of_sales_app_v2.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment, KonfirmasiPembelianDialog.DialogBuyListener {
+
+
+    FirebaseFirestore fs;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -68,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        fs = FirebaseFirestore.getInstance();
 
 
 //        //Isi Menu makanan
@@ -267,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
                 customerID = sharedPreferencesMenu.getInt("customerID", 0);
                 int customerID_next = customerID+1;
                 binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
+                Toast.makeText(getApplicationContext(), "Nomor pelanggan berhasil di-restart", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -383,10 +396,31 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
 
 
-        namaPesanan.clear();
-        hargaSatuanPesanan.clear();
-        subtotalPesanan.clear();
-        quantityPesanan.clear();
+
+        for (int i = 0; i < namaPesanan.size(); i++){
+            fs.collection("test_v2").document(getDate()).update(namaPesanan.get(0), FieldValue.increment(quantityPesanan.get(0))).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    namaPesanan.remove(0);
+                    hargaSatuanPesanan.remove(0);
+                    subtotalPesanan.remove(0);
+                    quantityPesanan.remove(0);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+        }
+
+
+//        namaPesanan.clear();
+//        hargaSatuanPesanan.clear();
+//        subtotalPesanan.clear();
+//        quantityPesanan.clear();
+        listTransactionRecyclerAdapter.notifyDataSetChanged();
 
 
     }
@@ -504,6 +538,31 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
     }
+
+    public String getDate() {
+        Long datetime = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(datetime);
+        String date_full = (String) String.valueOf(timestamp);
+        String date = date_full.substring(0, 10);
+        return date;
+    }
+
+    public String getMonth() {
+        Long datetime = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(datetime);
+        String date_full = (String) String.valueOf(timestamp);
+        String month = date_full.substring(0, 7);
+        return month;
+    }
+
+    public String getYear() {
+        Long datetime = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(datetime);
+        String date_full = (String) String.valueOf(timestamp);
+        String year = date_full.substring(0, 4);
+        return year;
+    }
+
 
 
 

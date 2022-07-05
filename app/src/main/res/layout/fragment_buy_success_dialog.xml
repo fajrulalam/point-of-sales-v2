@@ -35,7 +35,7 @@
         android:fontFamily="@font/poppins_bold"
         android:gravity="center"
         android:text="(Rp99,000)"
-        android:textColor="#5E5E5E"
+        android:textColor="#EF8D8D"
         android:textSize="18sp"></TextView>
 
 

@@ -43,7 +43,7 @@ public class BuySuccessDialog extends AppCompatDialogFragment {
         nomorPelanggan = view.findViewById(R.id.nomorPelanggan);
         nominalKembalian = view.findViewById(R.id.nominalKembalian);
         nomorPelanggan.setText(customerNumber_update +"");
-        nominalKembalian.setText("Rp"+ String.format("%,d", kembalian));
+        nominalKembalian.setText("(Rp"+ String.format("%,d", kembalian)+")");
 
 
         okButton = view.findViewById(R.id.okButton);
