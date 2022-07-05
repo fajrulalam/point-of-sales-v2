@@ -53,8 +53,6 @@ public class MakananFragment extends Fragment implements MakananGridRecyclerAdap
 //        Log.i("Unordered", namaMakanan_sorted.toString());
 
 
-
-
         MakananGridRecyclerAdapter makananGridRecyclerAdapter = new MakananGridRecyclerAdapter(getContext(), namaMakanan, namaMakanan_sorted, gambarMakanan, hargaSatuan, this);
         recyclerViewMakanan = fragment.findViewById(R.id.MenuMakananRecyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3, RecyclerView.VERTICAL, false);

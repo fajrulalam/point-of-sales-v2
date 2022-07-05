@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
     ArrayList<Integer> gambarMinuman;
     ArrayList<Integer> hargaSatuanMinuman;
 
+    int customerID;
+
     SharedPreferences sharedPreferencesMenu;
 
     ActivityMainBinding binding;
@@ -116,22 +118,11 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         //Get Value from the Saved SharedPreferences
         sharedPreferencesMenu = getApplicationContext().getSharedPreferences("Menu", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferencesMenu.edit();
+        customerID = sharedPreferencesMenu.getInt("customerID", 0);
+
+        binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID);
 
 
-//        try {
-//            String namaMinuman_serialized = ObjectSerializer.serialize(namaMinuman);
-//            String namaMinuman_sorted_serialized = ObjectSerializer.serialize(namaMinuman);
-//            String gambarMinuman_serialized = ObjectSerializer.serialize(gambarMinuman);
-//            String hargaSatuanMinuman_serialized = ObjectSerializer.serialize(hargaSatuanMinuman);
-//
-//            editor.putString("namaMinuman", namaMinuman_serialized).apply();
-//            editor.putString("namaMinuman_sorted", namaMinuman_sorted_serialized).apply();
-//            editor.putString("gambarMinuman", gambarMinuman_serialized).apply();
-//            editor.putString("hargaSatuanMinuman", hargaSatuanMinuman_serialized).apply();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         try {
             namaMakanan = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMakanan",  ObjectSerializer.serialize(new ArrayList<String>())));
@@ -247,6 +238,16 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding.total.setText("Rp0");
         listTransactionRecyclerAdapter = new ListTransactionRecyclerAdapter( namaPesanan, quantityPesanan, hargaSatuanPesanan, subtotalPesanan, this);
         binding.ListTransactionRecyclerView.setAdapter(listTransactionRecyclerAdapter);
+
+
+
+        //Beli Button
+        binding.buttonBeli.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
 
