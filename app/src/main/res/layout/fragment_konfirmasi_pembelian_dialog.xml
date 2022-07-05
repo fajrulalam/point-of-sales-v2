@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="@drawable/selectable_view"
+        android:padding="8dp"
+        android:src="@drawable/ic_baseline_close_24"/>
+
+
+    <TextView
+        android:id="@+id/judul"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:fontFamily="@font/montserrat_bold"
+        android:gravity="center"
+        android:text="Konfimasi Pembelian"
+        android:textColor="@color/purple_500"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/totalTagihan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/judul"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Total tagihan: "
+        android:textColor="@color/border"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/nominalTagihan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/judul"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="17dp"
+        android:layout_toRightOf="@id/totalTagihan"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Rp99.000"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/uangYangDiterimaTextInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_height="60dp"
+        android:layout_width="400dp"
+        android:layout_below="@id/totalTagihan"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/uangYangDiterima"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Uang yang diterima (Rp)"
+            android:padding="5dp"
+            android:textColorHint="#80D5D5D5"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/totalTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/uangYangDiterimaTextInputLayout"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="(total)"
+
+        android:visibility="gone" />
+    <RelativeLayout
+        android:id="@+id/pesan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/totalTextView">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/waktuPengambilanTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waktu Pengambilan"
+                android:layout_alignBaseline="@+id/diambilKapanJam"
+                android:textSize="14sp"
+                android:textColor="#9F9F9F"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_marginStart="0dp"
+                android:layout_marginRight="10dp"/>
+
+
+            <EditText
+                android:id="@+id/diambilKapanJam"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/waktuPengambilanTextView"
+                android:gravity="center"
+                android:hint="00"
+                android:inputType="numberPassword" />
+            <TextView
+                android:id="@+id/pemisah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/diambilKapanJam"
+                android:text=":"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_bold"
+
+                android:layout_toEndOf="@id/diambilKapanJam"/>
+
+            <EditText
+                android:id="@+id/diambilKapanMenit"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/pemisah"
+                android:gravity="center"
+                android:hint="00"
+                android:inputType="numberPassword" />
+
+
+
+
+        </RelativeLayout>
+
+
+
+
+    </RelativeLayout>
+
+
+    <Button
+        android:visibility="gone"
+        android:layout_width="85dp"
+        android:layout_height="46dp"
+        android:layout_below="@+id/pesan"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/okButton"
+        android:backgroundTint="#80D84315"
+        android:gravity="center"
+        android:text="Cancel"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="85dp"
+        android:layout_height="46dp"
+        android:layout_below="@+id/totalTagihan"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@id/uangYangDiterimaTextInputLayout"
+        android:backgroundTint="#8000695C"
+        android:gravity="center"
+        android:text="Ok"
+        android:textSize="12sp" />
+
+
+
+
+</RelativeLayout>

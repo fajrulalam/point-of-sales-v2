@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment {
+public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment, KonfirmasiPembelianDialog.DialogBuyListener {
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -240,11 +240,21 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding.ListTransactionRecyclerView.setAdapter(listTransactionRecyclerAdapter);
 
 
-
         //Beli Button
         binding.buttonBeli.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                if (binding.pesanCheckbox.isChecked()){
+                    bundle.putInt("pesan", 1);
+
+                } else {
+                    bundle.putInt("pesan", 0);
+                }
+                bundle.putInt("totalValue", countTotal(subtotalPesanan));
+                KonfirmasiPembelianDialog buyDialog = new KonfirmasiPembelianDialog();
+                buyDialog.setArguments(bundle);
+                buyDialog.show(getSupportFragmentManager(), "test");
 
             }
         });
@@ -335,13 +345,19 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
 
-    public void countTotal(ArrayList<Integer> subtotalPesanan) {
+    public int countTotal(ArrayList<Integer> subtotalPesanan) {
         int total = 0;
         for (int i : subtotalPesanan) {
             total += i;
         }
 
         binding.total.setText("Rp" + String.format("%,d", total).replace(",", "."));
+
+        return total;
+    }
+
+    @Override
+    public void countChange(int result, String waktuPengambilan) {
 
     }
 
