@@ -51,6 +51,8 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
     ArrayList<Integer> gambarMakanan;
     ArrayList<Integer> hargaSatuan;
 
+    RecyclerAdapterPilihGambar recyclerAdapterPilihGambar;
+
     int pcc;
 
         public TambahMenuFragment() {
@@ -64,10 +66,10 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         View view = binding.getRoot();
 
         bundle = this.getArguments();
-        namaMakanan = bundle.getStringArrayList("namaMakanan");
-        namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
-        gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
-        hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
+        String makananOrMinuman_check = bundle.getString("makananOrMinuman");
+
+
+
 
 
 
@@ -91,6 +93,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                 binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
                 binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.border));
                 makananOrMinuman = "Makanan";
+                populatePilihanGambar(makananOrMinuman);
             }
         });
         binding.radioButtonMinuman.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +103,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
                 binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
                 binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.border));
                 makananOrMinuman = "Minuman";
+                populatePilihanGambar(makananOrMinuman);
             }
         });
 
@@ -108,10 +112,53 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         pcc = -1;
         selectedImagePosition = -1;
         if (bundle.getString("query").matches("edit")) {
-            pcc = bundle.getInt("pcc");
-            String makananYangDiedit = namaMakanan_sorted.get(pcc);
 
-            int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+
+            makananOrMinuman = bundle.getString("makananOrMinuman");
+
+
+            String makananYangDiedit = "";
+            int index_unsorted = -1;
+            pcc = bundle.getInt("pcc");
+
+
+            switch (makananOrMinuman) {
+                case "Minuman":
+                    binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+                    binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.border));
+
+                    namaMakanan = bundle.getStringArrayList("namaMinuman");
+                    namaMakanan_sorted = bundle.getStringArrayList("namaMinuman_sorted");
+                    gambarMakanan = bundle.getIntegerArrayList("gambarMinuman");
+                    hargaSatuan = bundle.getIntegerArrayList("hargaSatuanMinuman");
+
+
+                    populatePilihanGambar("Minuman");
+
+                    makananYangDiedit = namaMakanan_sorted.get(pcc);
+                    index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+                    selectedImagePosition = pilihanGambar.indexOf(gambarMakanan.get(index_unsorted));
+
+                    break;
+                case "Makanan":
+                    binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
+                    binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.border));
+
+                    namaMakanan = bundle.getStringArrayList("namaMakanan");
+                    namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
+                    gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
+                    hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
+
+                    populatePilihanGambar("Makanan");
+
+                    makananYangDiedit = namaMakanan_sorted.get(pcc);
+                    index_unsorted = namaMakanan.indexOf(makananYangDiedit);
+                    selectedImagePosition = pilihanGambar.indexOf(gambarMakanan.get(index_unsorted));
+
+                    break;
+            }
+
+
             selectedImagePosition = pilihanGambar.indexOf(gambarMakanan.get(index_unsorted));
             binding.tambahkanButton.setText("Selesai");
 
@@ -119,23 +166,11 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             binding.namaMenuBaru.getEditText().setText(makananYangDiedit);
             binding.hargaMenuBaru.getEditText().setText(String.format("%,d", hargaSatuan.get(index_unsorted)));
 
-            makananOrMinuman = bundle.getString("makananOrMinuman");
-            switch (makananOrMinuman) {
-                case "Minuman":
-                    binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
-                    binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.border));
-                    break;
-                case "Makanan":
-                    binding.radioButtonMakanan.setBackgroundTintList(getResources().getColorStateList(R.color.chosen));
-                    binding.radioButtonMinuman.setBackgroundTintList(getResources().getColorStateList(R.color.border));
-                    break;
-            }
-
 
         }
 
         //Pilihan gambar
-        RecyclerAdapterPilihGambar recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
+        recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, RecyclerView.VERTICAL, false);
         binding.pilihGambarRecyclerView.setLayoutManager(gridLayoutManager);
         int spanCount = 5; // 3 columns
@@ -184,6 +219,8 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
 
                 }
 
+                Log.i("gambar", "ppc: " + selectedImagePosition + " bitmap: " + selectedImageBitMap );
+
 
 
 
@@ -219,21 +256,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
 
         //opsiGambar
         pilihanGambar = new ArrayList<>();
-        pilihanGambar.add(R.drawable.bakso_compressed);
-        pilihanGambar.add(R.drawable.kentang_compressed);
-        pilihanGambar.add(R.drawable.nasbung_a_compressed);
-        pilihanGambar.add(R.drawable.nasbung_b_compressed);
-        pilihanGambar.add(R.drawable.siomay_compressed);
-        pilihanGambar.add(R.drawable.pisang_goreng);
-        pilihanGambar.add(R.drawable.popmie_compressed);
-        pilihanGambar.add(R.drawable.bakso_compressed);
-        pilihanGambar.add(R.drawable.sereal_real);
-        pilihanGambar.add(R.drawable.sosis_nugget);
-        pilihanGambar.add(R.drawable.mie_ayam);
-        pilihanGambar.add(R.drawable.tofu);
-        pilihanGambar.add(R.drawable.nasi_pindang);
-        pilihanGambar.add(R.drawable.nasi_ayam_compressed);
-        pilihanGambar.add(R.drawable.egg_rice);
+
 //        pilihanGambar.add(R.drawable.french_fries);
 
 
@@ -246,6 +269,40 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
         }
 
         return dialog;
+    }
+
+    public void populatePilihanGambar(String makananOrMinuman) {
+
+        if (makananOrMinuman.matches("Makanan")){
+            pilihanGambar.add(R.drawable.bakso_compressed);
+            pilihanGambar.add(R.drawable.kentang_compressed);
+            pilihanGambar.add(R.drawable.nasbung_a_compressed);
+            pilihanGambar.add(R.drawable.nasbung_b_compressed);
+            pilihanGambar.add(R.drawable.siomay_compressed);
+            pilihanGambar.add(R.drawable.pisang_goreng);
+            pilihanGambar.add(R.drawable.popmie_compressed);
+            pilihanGambar.add(R.drawable.bakso_compressed);
+            pilihanGambar.add(R.drawable.sereal_real);
+            pilihanGambar.add(R.drawable.sosis_nugget);
+            pilihanGambar.add(R.drawable.mie_ayam);
+            pilihanGambar.add(R.drawable.tofu);
+            pilihanGambar.add(R.drawable.nasi_pindang);
+            pilihanGambar.add(R.drawable.nasi_ayam_compressed);
+            pilihanGambar.add(R.drawable.egg_rice);
+        } else {
+            pilihanGambar.add(R.drawable.ice_tea);
+            pilihanGambar.add(R.drawable.hot_tea);
+            pilihanGambar.add(R.drawable.milo1);
+            pilihanGambar.add(R.drawable.cendol);
+            pilihanGambar.add(R.drawable.coffee);
+            pilihanGambar.add(R.drawable.es_buah);
+        }
+        recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
+
+
+
+
+
     }
 
     public interface OnDataMenuBaru{
@@ -276,10 +333,14 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             View view = layoutInflater.inflate(R.layout.pilih_gambar_single_view, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
 
-            if (bundle.getString("query").matches("update")){
+            if (bundle.getString("query").matches("edit")){
                 String makananYangDiedit = namaMakanan_sorted.get(pcc);
                 int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
-                selectedImageBitMap = pilihanGambar.get(index_unsorted);
+                selectedImageBitMap = pilihanGambar.get(selectedImagePosition);
+                Log.i("Edit query", "acknowledged");
+            } else {
+                Log.i("Edit query", "NOT acknowledged");
+
             }
 
 

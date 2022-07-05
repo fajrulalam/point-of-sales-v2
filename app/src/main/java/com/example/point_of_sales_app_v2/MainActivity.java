@@ -111,16 +111,43 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
 
+
+
         //Get Value from the Saved SharedPreferences
         sharedPreferencesMenu = getApplicationContext().getSharedPreferences("Menu", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferencesMenu.edit();
 
+
+//        try {
+//            String namaMinuman_serialized = ObjectSerializer.serialize(namaMinuman);
+//            String namaMinuman_sorted_serialized = ObjectSerializer.serialize(namaMinuman);
+//            String gambarMinuman_serialized = ObjectSerializer.serialize(gambarMinuman);
+//            String hargaSatuanMinuman_serialized = ObjectSerializer.serialize(hargaSatuanMinuman);
+//
+//            editor.putString("namaMinuman", namaMinuman_serialized).apply();
+//            editor.putString("namaMinuman_sorted", namaMinuman_sorted_serialized).apply();
+//            editor.putString("gambarMinuman", gambarMinuman_serialized).apply();
+//            editor.putString("hargaSatuanMinuman", hargaSatuanMinuman_serialized).apply();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         try {
             namaMakanan = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMakanan",  ObjectSerializer.serialize(new ArrayList<String>())));
             namaMakanan_sorted = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMakanan_sorted",  ObjectSerializer.serialize(new ArrayList<String>())));
             gambarMakanan = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("gambarMakanan",  ObjectSerializer.serialize(new ArrayList<String>())));
             hargaSatuan = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("hargaSatuan",  ObjectSerializer.serialize(new ArrayList<String>())));
+
+
+            namaMinuman = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMinuman",  ObjectSerializer.serialize(new ArrayList<String>())));
+            namaMinuman_sorted = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMinuman_sorted",  ObjectSerializer.serialize(new ArrayList<String>())));
+            gambarMinuman = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("gambarMinuman",  ObjectSerializer.serialize(new ArrayList<String>())));
+            hargaSatuanMinuman = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("hargaSatuanMinuman",  ObjectSerializer.serialize(new ArrayList<String>())));
+
+            namaMakanan_sorted.sort(String::compareToIgnoreCase);
+            namaMinuman_sorted.sort(String::compareToIgnoreCase);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,7 +160,13 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             namaMakanan_sorted = extras.getStringArrayList("namaMakanan_sorted");
             gambarMakanan = extras.getIntegerArrayList("gambarMakanan");
             hargaSatuan = extras.getIntegerArrayList("hargaSatuan");
-            namaMakanan_sorted.sort(String::compareToIgnoreCase);
+
+            namaMinuman = extras.getStringArrayList("namaMinuman");
+            namaMinuman_sorted = extras.getStringArrayList("namaMinuman_sorted");
+            gambarMinuman = extras.getIntegerArrayList("gambarMinuman");
+            hargaSatuanMinuman = extras.getIntegerArrayList("hargaSatuanMinuman");
+
+            namaMinuman_sorted.sort(String::compareToIgnoreCase);
 
 
             try {
@@ -142,10 +175,24 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
                 String gambarMakanan_serialized = ObjectSerializer.serialize(gambarMakanan);
                 String hargaSatuan_serialized = ObjectSerializer.serialize(hargaSatuan);
 
+
+
                 editor.putString("namaMakanan", namaMakanan_serialized).apply();
                 editor.putString("namaMakanan_sorted", namaMakanan_sorted_serialized).apply();
                 editor.putString("gambarMakanan", gambarMakanan_serialized).apply();
                 editor.putString("hargaSatuan", hargaSatuan_serialized).apply();
+
+
+                String namaMinuman_serialized = ObjectSerializer.serialize(namaMinuman);
+                String namaMinuman_sorted_serialized = ObjectSerializer.serialize(namaMinuman);
+                String gambarMinuman_serialized = ObjectSerializer.serialize(gambarMinuman);
+                String hargaSatuanMinuman_serialized = ObjectSerializer.serialize(hargaSatuanMinuman);
+
+                editor.putString("namaMinuman", namaMinuman_serialized).apply();
+                editor.putString("namaMinuman_sorted", namaMinuman_sorted_serialized).apply();
+                editor.putString("gambarMinuman", gambarMinuman_serialized).apply();
+                editor.putString("hargaSatuanMinuman", hargaSatuanMinuman_serialized).apply();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -167,10 +214,16 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putStringArrayList("namaMinuman", namaMinuman);
+                bundle.putStringArrayList("namaMinuman_sorted", namaMinuman_sorted);
+                bundle.putIntegerArrayList("gambarMinuman", gambarMinuman);
+                bundle.putIntegerArrayList("hargaSatuanMinuman", hargaSatuanMinuman);
+
                 bundle.putStringArrayList("namaMakanan", namaMakanan);
                 bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted);
                 bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
                 bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
+
                 intent.putExtra("bundle", bundle);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

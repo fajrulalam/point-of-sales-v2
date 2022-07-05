@@ -37,6 +37,12 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
     ArrayList<Integer> gambarMakanan;
     ArrayList<Integer> hargaSatuan;
     MakananListRecyclerAdapter makananListRecyclerAdapter;
+    MinumanListRecyclerAdapter minumanListRecyclerAdapter;
+
+    ArrayList<String> namaMinuman;
+    ArrayList<String> namaMinuman_sorted;
+    ArrayList<Integer> gambarMinuman;
+    ArrayList<Integer> hargaSatuanMinuman;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,11 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
         namaMakanan_sorted = bundle.getStringArrayList("namaMakanan_sorted");
         gambarMakanan = bundle.getIntegerArrayList("gambarMakanan");
         hargaSatuan = bundle.getIntegerArrayList("hargaSatuan");
+        namaMinuman = bundle.getStringArrayList("namaMinuman");
+        namaMinuman_sorted = bundle.getStringArrayList("namaMinuman_sorted");
+        gambarMinuman = bundle.getIntegerArrayList("gambarMinuman");
+        hargaSatuanMinuman = bundle.getIntegerArrayList("hargaSatuanMinuman");
+
 
         wasAnythingChanged = false;
 
@@ -88,6 +99,9 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
         makananListRecyclerAdapter = new MakananListRecyclerAdapter(this, namaMakanan_sorted, namaMakanan, hargaSatuan);
         binding.makananRecyclerView.setAdapter(makananListRecyclerAdapter);
 
+        minumanListRecyclerAdapter = new MinumanListRecyclerAdapter(this, namaMinuman_sorted, namaMinuman, hargaSatuanMinuman);
+        binding.minumanRecyclerView.setAdapter(minumanListRecyclerAdapter);
+
 
 
 
@@ -111,12 +125,28 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
     @Override
     public void OnDataMenuBaru(String makananOrMinuman, ArrayList<String> namaMakanan, ArrayList<String> namaMakanan_sorted_, ArrayList<Integer> gambarMakanan, ArrayList<Integer> hargaSatuan) {
         wasAnythingChanged = true;
-        bundle.putStringArrayList("namaMakanan", namaMakanan);
-        bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted_);
-        bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
-        bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
-        namaMakanan_sorted.sort(String::compareToIgnoreCase);
-        makananListRecyclerAdapter.notifyDataSetChanged();
+
+        switch (makananOrMinuman) {
+            case "Makanan":
+                bundle.putStringArrayList("namaMakanan", namaMakanan);
+                bundle.putStringArrayList("namaMakanan_sorted", namaMakanan_sorted_);
+                bundle.putIntegerArrayList("gambarMakanan", gambarMakanan);
+                bundle.putIntegerArrayList("hargaSatuan", hargaSatuan);
+                namaMakanan_sorted.sort(String::compareToIgnoreCase);
+                makananListRecyclerAdapter.notifyDataSetChanged();
+
+                break;
+            case "Minuman":
+                bundle.putStringArrayList("namaMinuman", namaMakanan);
+                bundle.putStringArrayList("namaMinuman_sorted", namaMakanan_sorted_);
+                bundle.putIntegerArrayList("gambarMinuman", gambarMakanan);
+                bundle.putIntegerArrayList("hargaSatuanMinuman", hargaSatuan);
+                namaMinuman_sorted.sort(String::compareToIgnoreCase);
+                minumanListRecyclerAdapter.notifyDataSetChanged();
+                break;
+        }
+
+
     }
 
 
@@ -198,6 +228,111 @@ public class SettingsActivity extends AppCompatActivity implements TambahMenuFra
         @Override
         public int getItemCount() {
             return namaMakanan_sorted_rv.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder{
+            TextView nama;
+            TextView harga;
+            LinearLayout linearLayout;
+            ImageView delete;
+            ImageView edit;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+
+                nama = itemView.findViewById(R.id.nama);
+                harga = itemView.findViewById(R.id.harga);
+                linearLayout = itemView.findViewById(R.id.linearLayout);
+                delete = itemView.findViewById(R.id.delete);
+                edit = itemView.findViewById(R.id.edit);
+
+
+
+            }
+
+
+        }
+    }
+
+
+    public class MinumanListRecyclerAdapter extends RecyclerView.Adapter<MinumanListRecyclerAdapter.ViewHolder>{
+
+        Context context;
+        ArrayList<String> namaMinuman_sorted_rv;
+        ArrayList<String> namaMinuman_rv;
+        ArrayList<Integer> hargaSatuanMinuman_rv;
+
+        public MinumanListRecyclerAdapter(Context context, ArrayList<String> namaMinuman_sorted_rv, ArrayList<String> namaMinuman_rv, ArrayList<Integer> hargaSatuanMinuman_rv) {
+            this.context = context;
+            this.namaMinuman_sorted_rv = namaMinuman_sorted_rv;
+            this.namaMinuman_rv = namaMinuman_rv;
+            this.hargaSatuanMinuman_rv = hargaSatuanMinuman_rv;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(R.layout.simple_list_single_view, parent, false);
+            ViewHolder viewHolder = new ViewHolder(view);
+            return  viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.nama.setText(namaMinuman_sorted_rv.get(position));
+            int index = namaMinuman.indexOf(namaMinuman_sorted_rv.get(position));
+            holder.harga.setText("Rp"+String.format("%,d", hargaSatuanMinuman_rv.get(index)));
+
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Yakin hapus menu ini?")
+                            .setMessage("\n")
+                            .setPositiveButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setNegativeButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String namaMenu = namaMinuman_sorted_rv.get(holder.getAdapterPosition());
+                                    namaMinuman_sorted.remove(holder.getAdapterPosition());
+                                    int index =  namaMinuman.indexOf(namaMenu);
+
+                                    namaMinuman.remove(index);
+                                    hargaSatuanMinuman.remove(index);
+                                    gambarMinuman.remove(index);
+
+                                    minumanListRecyclerAdapter.notifyDataSetChanged();
+
+
+                                }
+                            }).show();
+                }
+            });
+
+            holder.edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TambahMenuFragment tambahMenuFragment = new TambahMenuFragment();
+                    bundle.putString("query", "edit");
+                    bundle.putInt("pcc", holder.getAdapterPosition());
+                    bundle.putString("makananOrMinuman", "Minuman");
+                    tambahMenuFragment.setArguments(bundle);
+                    tambahMenuFragment.show(getSupportFragmentManager(), tambahMenuFragment.getTag());
+
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return namaMinuman_sorted_rv.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder{
