@@ -150,7 +150,7 @@ public class KonfirmasiPembelianDialog extends AppCompatDialogFragment {
                     waktuPengambilan = "Tidak Memesan";
                 }
                 try {
-                    int kembalian = (int) (Integer.parseInt(uangYangDikembalikan) - total);
+                    int kembalian = (int) (Integer.parseInt(uangYangDikembalikan.replace(",", "")) - total);
 //                    Log.i("Kembalianmu...","Rp" + kembalian);
                     if (kembalian >= 0 ) {
                         if (!diambilKapanJam.getText().toString().matches("") && !diambilKapanMenit.getText().toString().matches("")) {

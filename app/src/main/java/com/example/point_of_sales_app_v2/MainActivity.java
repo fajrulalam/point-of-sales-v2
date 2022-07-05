@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         sharedPreferencesMenu = getApplicationContext().getSharedPreferences("Menu", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferencesMenu.edit();
         customerID = sharedPreferencesMenu.getInt("customerID", 0);
-
-        binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID);
+        int customerID_next = customerID+1;
+        binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
 
 
 
@@ -260,6 +260,17 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         });
 
 
+        binding.restartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharedPreferencesMenu.edit().putInt("customerID", 0).commit();
+                customerID = sharedPreferencesMenu.getInt("customerID", 0);
+                int customerID_next = customerID+1;
+                binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
+            }
+        });
+
+
 
 
 
@@ -358,6 +369,25 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
     @Override
     public void countChange(int result, String waktuPengambilan) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("kembalian", result);
+        bundle.putInt("customerNumber_update", customerID);
+        BuySuccessDialog buySuccessDialog = new BuySuccessDialog();
+        buySuccessDialog.setArguments(bundle);
+        buySuccessDialog.show(getSupportFragmentManager(), "test");
+
+
+        sharedPreferencesMenu.edit().putInt("customerID", customerID+1).commit();
+        customerID = sharedPreferencesMenu.getInt("customerID", 0);
+        int customerID_next = customerID+1;
+        binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
+
+
+        namaPesanan.clear();
+        hargaSatuanPesanan.clear();
+        subtotalPesanan.clear();
+        quantityPesanan.clear();
+
 
     }
 

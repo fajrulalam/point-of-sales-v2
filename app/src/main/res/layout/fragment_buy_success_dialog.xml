@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="BuySuccessDialog">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transaksi Berhasil"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="24dp"
+        android:textColor="@color/purple_500">
+    </TextView>
+
+    <TextView
+        android:id="@+id/nomorPelanggan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="36sp"
+        android:layout_marginTop="80dp"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center"
+        android:text="56"></TextView>
+
+
+    <TextView
+        android:id="@+id/nominalKembalian"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="center"
+        android:text="(Rp99,000)"
+        android:textColor="#5E5E5E"
+        android:textSize="18sp"></TextView>
+
+
+
+
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nominalKembalian"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="OK"></Button>
+
+
+
+</RelativeLayout>
