@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -279,9 +280,10 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding.restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharedPreferencesMenu.edit().putInt("customerID", 0).commit();
+                sharedPreferencesMenu.edit().putInt("customerID", 1).commit();
                 customerID = sharedPreferencesMenu.getInt("customerID", 0);
-                int customerID_next = customerID+1;
+                Log.i("customerID", customerID+"");
+                int customerID_next = customerID;
                 binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
                 Toast.makeText(getApplicationContext(), "Nomor pelanggan berhasil di-restart", Toast.LENGTH_SHORT).show();
             }
@@ -386,12 +388,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
     @Override
     public void countChange(int result, String waktuPengambilan) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("kembalian", result);
-        bundle.putInt("customerNumber_update", customerID);
-        BuySuccessDialog buySuccessDialog = new BuySuccessDialog();
-        buySuccessDialog.setArguments(bundle);
-        buySuccessDialog.show(getSupportFragmentManager(), "test");
+
 
         int bungkus = 0;
         if(binding.bungkusCheckbox.isChecked()) {
@@ -399,6 +396,12 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         } else if (binding.pesanCheckbox.isChecked()) {
             bungkus = 2;
         }
+
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Mohon tunggu sebentar...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
 
 
         HashMap<String, Object> map = new HashMap<>();
@@ -450,11 +453,28 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+
+                progress.dismiss();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("kembalian", result);
+                bundle.putInt("customerNumber_update", customerID-1);
+                BuySuccessDialog buySuccessDialog = new BuySuccessDialog();
+                buySuccessDialog.setArguments(bundle);
+                buySuccessDialog.show(getSupportFragmentManager(), "test");
+
                 namaPesanan.clear();
                 hargaSatuanPesanan.clear();
                 subtotalPesanan.clear();
                 quantityPesanan.clear();
                 listTransactionRecyclerAdapter.notifyDataSetChanged();
+
+                sharedPreferencesMenu.edit().putInt("customerID", customerID+1).commit();
+                customerID = sharedPreferencesMenu.getInt("customerID", 0);
+                binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID);
+
+                Log.i("customerID", customerID+"");
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -463,10 +483,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             }
         });
 
-        sharedPreferencesMenu.edit().putInt("customerID", customerID+1).commit();
-        customerID = sharedPreferencesMenu.getInt("customerID", 0);
-        int customerID_next = customerID+1;
-        binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
+
 
 
 
