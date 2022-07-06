@@ -261,6 +261,11 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         binding.buttonBeli.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (namaPesanan.size()==0) {
+                    Toast.makeText(getApplicationContext(), "Tidak ada pesanan", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 if (binding.pesanCheckbox.isChecked()){
                     bundle.putInt("pesan", 1);
