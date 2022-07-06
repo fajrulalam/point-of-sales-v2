@@ -415,13 +415,13 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
         WriteBatch batch = fs.batch();
 
-        DocumentReference test_v2 = fs.collection("test_v2").document(getDate());
+        DocumentReference test_v2 = fs.collection("DailyTransaction").document(getDate());
         batch.set(test_v2, map, SetOptions.merge());
 
-        DocumentReference test_v2_monthly = fs.collection("test_v2_monthly").document(getMonth());
+        DocumentReference test_v2_monthly = fs.collection("MonthlyTransaction").document(getMonth());
         batch.set(test_v2_monthly, map, SetOptions.merge());
 
-        DocumentReference test_v2_yearly = fs.collection("test_v2_yearly").document(getYear());
+        DocumentReference test_v2_yearly = fs.collection("YearlyTransaction").document(getYear());
         batch.set(test_v2_yearly, map, SetOptions.merge());
 
         String namaPesanan_serialized = "";
