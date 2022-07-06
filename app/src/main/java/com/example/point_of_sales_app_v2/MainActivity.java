@@ -33,11 +33,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment, KonfirmasiPembelianDialog.DialogBuyListener {
@@ -397,30 +399,40 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
 
-        for (int i = 0; i < namaPesanan.size(); i++){
-            fs.collection("test_v2").document(getDate()).update(namaPesanan.get(0), FieldValue.increment(quantityPesanan.get(0))).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        for (String str : namaPesanan) {
+            HashMap<String, FieldValue> map = new HashMap<>();
+            map.put(str, FieldValue.increment(quantityPesanan.get(namaPesanan.indexOf(str))));
+//            Log.i("Map", map.toString());
+
+            fs.collection("test_v2").document(getDate()).set(map, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    namaPesanan.remove(0);
-                    hargaSatuanPesanan.remove(0);
-                    subtotalPesanan.remove(0);
-                    quantityPesanan.remove(0);
+                    int pcc = namaPesanan.indexOf(str);
+                    namaPesanan.remove(pcc);
+                    hargaSatuanPesanan.remove(pcc);
+                    subtotalPesanan.remove(pcc);
+                    quantityPesanan.remove(pcc);
+//                    Log.i("Nama Pesanan", namaPesanan.get(0));
+                    listTransactionRecyclerAdapter.notifyDataSetChanged();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     e.printStackTrace();
+
                 }
             });
-
         }
+
+
+
 
 
 //        namaPesanan.clear();
 //        hargaSatuanPesanan.clear();
 //        subtotalPesanan.clear();
 //        quantityPesanan.clear();
-        listTransactionRecyclerAdapter.notifyDataSetChanged();
 
 
     }

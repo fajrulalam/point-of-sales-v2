@@ -61,19 +61,4 @@ public class BuySuccessDialog extends AppCompatDialogFragment {
     }
 
 
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//
-//        try {
-//            dialogBuyListener = (DialogBuyListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString() + "must implement ExampleDialogListener");
-//        }
-//    }
-//
-//    public interface DialogBuyListener{
-//        void countChange(int result);
-//
-//    }
 }
