@@ -31,9 +31,11 @@ import com.example.point_of_sales_app_v2.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -391,48 +393,81 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         buySuccessDialog.setArguments(bundle);
         buySuccessDialog.show(getSupportFragmentManager(), "test");
 
+        int bungkus = 0;
+        if(binding.bungkusCheckbox.isChecked()) {
+            bungkus = 1;
+        } else if (binding.pesanCheckbox.isChecked()) {
+            bungkus = 2;
+        }
+
+
+        HashMap<String, Object> map = new HashMap<>();
+        for (String str : namaPesanan) {
+            map.put(str, FieldValue.increment(quantityPesanan.get(namaPesanan.indexOf(str))));
+        }
+            map.put("total", FieldValue.increment(countTotal(subtotalPesanan)));
+            map.put("year", getYear());
+            map.put("month", getMonth());
+            map.put("date", getDate());
+            map.put("customerNumber", FieldValue.increment(1));
+            map.put("timestamp", FieldValue.serverTimestamp());
+
+
+        WriteBatch batch = fs.batch();
+
+        DocumentReference test_v2 = fs.collection("test_v2").document(getDate());
+        batch.set(test_v2, map, SetOptions.merge());
+
+        DocumentReference test_v2_monthly = fs.collection("test_v2_monthly").document(getMonth());
+        batch.set(test_v2_monthly, map, SetOptions.merge());
+
+        DocumentReference test_v2_yearly = fs.collection("test_v2_yearly").document(getYear());
+        batch.set(test_v2_yearly, map, SetOptions.merge());
+
+        String namaPesanan_serialized = "";
+        String quantityPesanan_serialized = "";
+        for (String t : namaPesanan){
+            namaPesanan_serialized += t +", ";
+            quantityPesanan_serialized += quantityPesanan.get(namaPesanan.indexOf(t))+", ";
+        }
+        namaPesanan_serialized = namaPesanan_serialized.substring(0, namaPesanan_serialized.length()-2);
+        quantityPesanan_serialized = quantityPesanan_serialized.substring(0, quantityPesanan_serialized.length()-2);
+
+        HashMap<String, Object> map_status = new HashMap<>();
+        map_status.put("customerNumber", customerID);
+        map_status.put("itemID", namaPesanan_serialized);
+        map_status.put("quantity", quantityPesanan_serialized);
+        map_status.put("status", "Serving");
+        map_status.put("bungkus", bungkus);
+        map_status.put("total", countTotal(subtotalPesanan));
+        map_status.put("waktuPengambilan", waktuPengambilan);
+
+        DocumentReference status = fs.collection("Status").document(""+customerID);
+        batch.set(status, map_status, SetOptions.merge());
+
+
+
+        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                namaPesanan.clear();
+                hargaSatuanPesanan.clear();
+                subtotalPesanan.clear();
+                quantityPesanan.clear();
+                listTransactionRecyclerAdapter.notifyDataSetChanged();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         sharedPreferencesMenu.edit().putInt("customerID", customerID+1).commit();
         customerID = sharedPreferencesMenu.getInt("customerID", 0);
         int customerID_next = customerID+1;
         binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
 
-
-
-
-        for (String str : namaPesanan) {
-            HashMap<String, FieldValue> map = new HashMap<>();
-            map.put(str, FieldValue.increment(quantityPesanan.get(namaPesanan.indexOf(str))));
-//            Log.i("Map", map.toString());
-
-            fs.collection("test_v2").document(getDate()).set(map, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    int pcc = namaPesanan.indexOf(str);
-                    namaPesanan.remove(pcc);
-                    hargaSatuanPesanan.remove(pcc);
-                    subtotalPesanan.remove(pcc);
-                    quantityPesanan.remove(pcc);
-//                    Log.i("Nama Pesanan", namaPesanan.get(0));
-                    listTransactionRecyclerAdapter.notifyDataSetChanged();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-
-                }
-            });
-        }
-
-
-
-
-
-//        namaPesanan.clear();
-//        hargaSatuanPesanan.clear();
-//        subtotalPesanan.clear();
-//        quantityPesanan.clear();
 
 
     }
