@@ -326,6 +326,13 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             pilihanGambar.add(R.drawable.nasi_pindang);
             pilihanGambar.add(R.drawable.nasi_ayam_compressed);
             pilihanGambar.add(R.drawable.egg_rice);
+            pilihanGambar.add(R.drawable.soto);
+            pilihanGambar.add(R.drawable.rice);
+            pilihanGambar.add(R.drawable.egg);
+            pilihanGambar.add(R.drawable.krupuk);
+            pilihanGambar.add(R.drawable.pangsit);
+            pilihanGambar.add(R.drawable.mie);
+            pilihanGambar.add(R.drawable.nasi_goreng);
         } else {
             pilihanGambar.add(R.drawable.ice_tea);
             pilihanGambar.add(R.drawable.hot_tea);
@@ -333,6 +340,7 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             pilihanGambar.add(R.drawable.cendol);
             pilihanGambar.add(R.drawable.coffee);
             pilihanGambar.add(R.drawable.es_buah);
+            pilihanGambar.add(R.drawable.club);
         }
         //Pilihan gambar
         recyclerAdapterPilihGambar = new RecyclerAdapterPilihGambar(getActivity(), pilihanGambar, selectedImagePosition);
@@ -381,7 +389,11 @@ public class TambahMenuFragment extends BottomSheetDialogFragment {
             if (bundle.getString("query").matches("edit")){
                 String makananYangDiedit = namaMakanan_sorted.get(pcc);
                 int index_unsorted = namaMakanan.indexOf(makananYangDiedit);
-                selectedImageBitMap = pilihanGambar.get(selectedImagePosition);
+                try {
+                    selectedImageBitMap = pilihanGambar.get(selectedImagePosition);
+                } catch (Exception e) {
+                    Log.i("Error", e.toString());
+                }
                 Log.i("Edit query", "acknowledged");
             } else {
                 Log.i("Edit query", "NOT acknowledged");

@@ -35,6 +35,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -43,6 +45,7 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment, KonfirmasiPembelianDialog.DialogBuyListener {
@@ -123,13 +126,8 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         hargaSatuanMinuman.add(5000);
         hargaSatuanMinuman.add(5000);
 
-
         namaMakanan_sorted.sort(String::compareToIgnoreCase);
         namaMakanan_sorted.sort(String::compareToIgnoreCase);
-
-
-
-
 
 
         //Get Value from the Saved SharedPreferences
@@ -146,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
             namaMakanan_sorted = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMakanan_sorted",  ObjectSerializer.serialize(new ArrayList<String>())));
             gambarMakanan = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("gambarMakanan",  ObjectSerializer.serialize(new ArrayList<String>())));
             hargaSatuan = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("hargaSatuan",  ObjectSerializer.serialize(new ArrayList<String>())));
-
 
             namaMinuman = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMinuman",  ObjectSerializer.serialize(new ArrayList<String>())));
             namaMinuman_sorted = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferencesMenu.getString("namaMinuman_sorted",  ObjectSerializer.serialize(new ArrayList<String>())));
@@ -213,10 +210,6 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         }
 
 
-
-
-
-
         binding.settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -273,6 +266,10 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
                 } else {
                     bundle.putInt("pesan", 0);
                 }
+
+//                if (binding.bungkusCheckbox.isChecked()) {
+//                    checkQuantity(quantityPesanan);
+//                }
                 bundle.putInt("totalValue", countTotal(subtotalPesanan));
                 KonfirmasiPembelianDialog buyDialog = new KonfirmasiPembelianDialog();
                 buyDialog.setArguments(bundle);
@@ -291,6 +288,22 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
                 int customerID_next = customerID;
                 binding.nomorPelangganBerikutnya.setText("Nomor Berikutnya: " + customerID_next);
                 Toast.makeText(getApplicationContext(), "Nomor pelanggan berhasil di-restart", Toast.LENGTH_SHORT).show();
+
+                fs.collection("RecentyServed").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<String> list = new ArrayList<>();
+                        for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                            list.add(documentSnapshot.getId());
+                        }
+
+                        for (String id : list) {
+                            fs.collection("RecentyServed").document(id).delete();
+                        }
+
+                    }
+                });
+
             }
         });
 
@@ -299,6 +312,21 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
 
     }
+
+
+    public int checkQuantity(ArrayList<Integer> quantityPesanan) {
+        if (!binding.bungkusCheckbox.isChecked()){
+            return 0;
+        }
+        int sum = 0;
+        for (int q : quantityPesanan) {
+            sum += q;
+        }
+
+        int additionalCost = (sum / 5) * 1000;
+
+        return additionalCost;
+    };
 
 
 
@@ -331,12 +359,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
         }
 
-//        Log.i("DataMakanan", "Nama: " + namaMakanan + " Harga: Rp" +hargaSatuan + "Subtotal: " + subtotalPesanan.get(index_existOrNot) + " Quant: " + quantityPesanan.get(index_existOrNot));
-//        Log.i("Nama Pesanan", "Length : " + namaPesanan.size()+ " " + namaPesanan.toString());
-//        Log.i("subtotal", "Length : " + subtotalPesanan.size()+ " " + subtotalPesanan.toString());
-//        Log.i("harga satuan", "Length : " + hargaSatuanPesanan.size()+ " " + hargaSatuanPesanan.toString());
-//        Log.i("Quantity", "Length : " + quantityPesanan.size()+ " " + quantityPesanan.toString());
-//        listTransactionRecyclerAdapter = new ListTransactionRecyclerAdapter( namaPesanan, hargaSatuanPesanan, subtotalPesanan, quantityPesanan, this);
+
 
         listTransactionRecyclerAdapter.notifyDataSetChanged();
 
@@ -388,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
         binding.total.setText("Rp" + String.format("%,d", total).replace(",", "."));
 
-        return total;
+        return total + checkQuantity(quantityPesanan);
     }
 
     @Override
@@ -448,6 +471,7 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
         map_status.put("status", "Serving");
         map_status.put("bungkus", bungkus);
         map_status.put("total", countTotal(subtotalPesanan));
+        map_status.put("waktuPesan", FieldValue.serverTimestamp());
         map_status.put("waktuPengambilan", waktuPengambilan);
 
         DocumentReference status = fs.collection("Status").document(""+customerID);
