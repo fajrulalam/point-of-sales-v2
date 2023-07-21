@@ -16,6 +16,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -47,6 +49,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements MakananFragment.OnDataMakananFragment, MinumanFragment.OnDataMinumanFragment, KonfirmasiPembelianDialog.DialogBuyListener {
 
@@ -303,6 +315,24 @@ public class MainActivity extends AppCompatActivity implements MakananFragment.O
 
                     }
                 });
+
+            }
+        });
+
+
+        binding.printSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if (b) {
+                    //change the tint of binding.switchIndicator to green
+                    binding.printerIndicator.setColorFilter(getResources().getColor(R.color.chosen));
+                    Log.i("printSwitch", "on");
+                } else {
+                    binding.printerIndicator.setColorFilter(getResources().getColor(R.color.black));
+                    Log.i("printSwitch", "off");
+
+                }
 
             }
         });

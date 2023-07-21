@@ -152,6 +152,42 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/total" />
 
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/buttonBeli">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_print_24"/>
+
+                <Switch
+                    android:id="@+id/printSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:checked="true"
+                    android:thumbTint="#E6417E77" />
+
+                <ImageView
+                    android:id="@+id/printerIndicator"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/baseline_circle_24"
+                    android:layout_marginLeft="12dp"
+                    app:tint="#E61414" />
+
+
+
+
+            </LinearLayout>
+
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
